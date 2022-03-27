@@ -6,9 +6,16 @@ import javax.persistence.*
 @Entity
 data class ProductAccessory
 (
-        @Id val product_accessory_id: Int,
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        val productAccessoryId: Int,
+
         /*ManyToOne materialtype and product*/
-        @Column(name="product_id") val productId: Int,
-        @Column(name="name") val name: String,
-        @Column(name = "size") val size: Int
+        @Column(name="product_id")
+        val productId: Int,
+
+        @Column(name="name")
+        val name: String,
+        @Column(name = "size")
+        val size: Int
 )
