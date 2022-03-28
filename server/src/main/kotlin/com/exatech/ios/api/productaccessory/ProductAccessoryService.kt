@@ -9,9 +9,9 @@ import java.util.*
 class ProductAccessoryService(val db: ProductAccessoryRepo) {
 
     fun findAll(): List<ProductAccessory> = db.findAll()
-    fun findOne(productId: Int): Optional<ProductAccessory> = db.findById(productId)
+    fun findById(productId: Int): Optional<ProductAccessory> = db.findById(productId)
 
-    fun updateOne(productAccessory: ProductAccessory): ProductAccessory? {
+    fun update(productAccessory: ProductAccessory): ProductAccessory? {
         /*
         val response = ServiceResponse<ProductAccessory>()
 
@@ -30,13 +30,17 @@ class ProductAccessoryService(val db: ProductAccessoryRepo) {
         }
         return db.save(productAccessory)
     }
-
-    fun saveOne(productAccessory: ProductAccessory): ProductAccessory {
+    fun save(productAccessory: ProductAccessory): ProductAccessory {
         return db.save(productAccessory)
     }
 
     @Transactional
-    fun deleteByAccessoryId(accessoryId: Int): HttpStatus {
+    fun deleteAll() {
+        return db.deleteAll()
+    }
+
+    @Transactional
+    fun deleteById(accessoryId: Int): HttpStatus {
         val delCount = db.deleteByProductAccessoryId(accessoryId)
         if(delCount < 1) {
             return HttpStatus.NOT_FOUND
@@ -46,7 +50,7 @@ class ProductAccessoryService(val db: ProductAccessoryRepo) {
     }
 
 
-    fun findByProductId(productId: Int): List<ProductAccessory> { //TODO: Temporary Function!
-        return listOf(ProductAccessory(404, 0, "Hello World!", 0))
+    fun findByProductId(productId: Int): List<ProductAccessory>? { //TODO: Temporary Function!
+        return null//listOf(ProductAccessory(404, null, "Hello World!", 0))
     }
 }

@@ -11,31 +11,36 @@ class ProductAccessoryController(val service: ProductAccessoryService) {
     @GetMapping
     fun getAll(): List<ProductAccessory> = service.findAll()
     @GetMapping("/{accessoryId}")
-    fun getOne(@PathVariable accessoryId: Int): ResponseEntity<ProductAccessory> = ResponseEntity.of(service.findOne(accessoryId))
+    fun getOne(@PathVariable accessoryId: Int): ResponseEntity<ProductAccessory> = ResponseEntity.of(service.findById(accessoryId))
 
     @PutMapping
     fun editOne(@RequestBody accessory: ProductAccessory): ResponseEntity<ProductAccessory> {
-        val updatedAccessory = service.updateOne(accessory) ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+        val updatedAccessory = service.update(accessory) ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
         return ResponseEntity.status(HttpStatus.OK).body(updatedAccessory)
     }
 
     @PostMapping
     fun saveOne(@RequestBody accessory: ProductAccessory): ResponseEntity<ProductAccessory> {
-        val serviceResponse = service.saveOne(accessory)
+        val serviceResponse = service.save(accessory)
         return ResponseEntity.status(HttpStatus.CREATED).body(serviceResponse)
     }
 
+    /**
+     *  TODO: !!!!!!TEMPORARY FUNCTION!!!!!!
+     */
+    @DeleteMapping
+    fun deleteAll() {
+        return service.deleteAll()
+    }
     @DeleteMapping("/{accessoryId}")
     fun deleteOne(@PathVariable accessoryId: Int): ResponseEntity<ProductAccessory> {
-        val serviceResponse = service.deleteByAccessoryId(accessoryId)
+        val serviceResponse = service.deleteById(accessoryId)
         return ResponseEntity.status(serviceResponse).build()
     }
 
 
 
-
-
     //TODO: This mapping should exist under products
     @GetMapping("/product/{productId}")
-    fun getOneById(@PathVariable productId: Int): List<ProductAccessory> = service.findByProductId(productId)
+    fun getOneById(@PathVariable productId: Int): List<Any> = service.findByProductId(productId) ?: listOf("Hello!")
 }
