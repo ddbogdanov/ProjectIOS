@@ -27,6 +27,7 @@ class ProductController(val service: ProductService) {
 
     @PutMapping("/{productId}")
     fun editOne(@PathVariable productId: Int, @RequestBody product: Product): ResponseEntity<Product> {
+        //TODO Check if material type exists by its name/type. Do not add a new material type if it already exists. Do same for ProductAccessories
         if(productId != product.productId) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
 
         val updatedAccessory = service.update(product) ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
@@ -36,6 +37,7 @@ class ProductController(val service: ProductService) {
 
     @PostMapping
     fun saveOne(@RequestBody product: Product): ResponseEntity<Product>? {
+        //TODO Check if material type exists by its name/type. Do not add a new material type if it already exists. Do same for ProductAccessories
         val savedProduct = service.save(product)
         return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct)
     }

@@ -1,5 +1,6 @@
 package com.exatech.ios.api.product
 
+import com.exatech.ios.api.materialtype.MaterialType
 import com.exatech.ios.api.productaccessory.ProductAccessory
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import org.hibernate.Hibernate
@@ -19,6 +20,10 @@ data class Product
         @OneToMany(cascade=[CascadeType.ALL], fetch=FetchType.LAZY, mappedBy="product")
         @JsonManagedReference
         val productAccessories: List<ProductAccessory>,
+
+        @ManyToOne(fetch=FetchType.LAZY, cascade=[CascadeType.ALL])
+        @JoinColumn(name="material_type_id")
+        val materialType: MaterialType,
 
         @Column(name="name")
         val name: String,
