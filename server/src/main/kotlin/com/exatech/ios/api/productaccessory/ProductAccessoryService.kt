@@ -1,33 +1,22 @@
 package com.exatech.ios.api.productaccessory
 
+import com.exatech.ios.api.product.ProductService
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
-class ProductAccessoryService(val db: ProductAccessoryRepo) {
+class ProductAccessoryService(val db: ProductAccessoryRepo, val ps: ProductService) {
 
     fun findAll(): List<ProductAccessory> = db.findAll()
     fun findById(productId: Int): Optional<ProductAccessory> = db.findById(productId)
 
-    fun update(productAccessory: ProductAccessory): ProductAccessory? {
-        /*
-        val response = ServiceResponse<ProductAccessory>()
-
-        return if(!db.existsById(accessoryId)) {
-            response.statusCode(HttpStatus.NOT_FOUND)
+    fun update(productAccessory: ProductAccessory, productId: Int): ProductAccessory? {
+        if(!db.existsById(productAccessory.productAccessoryId) || !ps.existsById(productId)) {
+            return null
         }
-        else if(productAccessory.productAccessoryId != accessoryId) {
-            response.statusCode(HttpStatus.BAD_REQUEST).message("ID doesn't match")
-        }
-        else {
-            response.responseObject(db.save(productAccessory)).statusCode(HttpStatus.OK)
-        }
-        */
-        if(!db.existsById(productAccessory.productAccessoryId)) {
-            return null;
-        }
+        productAccessory.product = ps.findById(productId).get()
         return db.save(productAccessory)
     }
     fun save(productAccessory: ProductAccessory): ProductAccessory {

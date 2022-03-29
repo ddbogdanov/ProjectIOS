@@ -13,9 +13,12 @@ class ProductAccessoryController(val service: ProductAccessoryService) {
     @GetMapping("/{accessoryId}")
     fun getOne(@PathVariable accessoryId: Int): ResponseEntity<ProductAccessory> = ResponseEntity.of(service.findById(accessoryId))
 
-    @PutMapping
-    fun editOne(@RequestBody accessory: ProductAccessory): ResponseEntity<ProductAccessory> {
-        val updatedAccessory = service.update(accessory) ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+    @PutMapping("/{accessoryId}")
+    fun editOne(@PathVariable accessoryId: Int, @RequestParam productId: Int, @RequestBody accessory: ProductAccessory): ResponseEntity<ProductAccessory> {
+        if(accessoryId != accessory.productAccessoryId) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+
+        val updatedAccessory = service.update(accessory, productId) ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+
         return ResponseEntity.status(HttpStatus.OK).body(updatedAccessory)
     }
 
@@ -25,9 +28,6 @@ class ProductAccessoryController(val service: ProductAccessoryService) {
         return ResponseEntity.status(HttpStatus.CREATED).body(serviceResponse)
     }
 
-    /**
-     *  TODO: !!!!!!TEMPORARY FUNCTION!!!!!!
-     */
     @DeleteMapping
     fun deleteAll() {
         return service.deleteAll()
@@ -37,10 +37,4 @@ class ProductAccessoryController(val service: ProductAccessoryService) {
         val serviceResponse = service.deleteById(accessoryId)
         return ResponseEntity.status(serviceResponse).build()
     }
-
-
-
-    //TODO: This mapping should exist under products
-    @GetMapping("/product/{productId}")
-    fun getOneById(@PathVariable productId: Int): List<Any> = service.findByProductId(productId) ?: listOf("Hello!")
 }

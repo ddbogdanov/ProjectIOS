@@ -1,9 +1,7 @@
 package com.exatech.ios.api.product
 
 import com.exatech.ios.api.productaccessory.ProductAccessory
-import com.fasterxml.jackson.annotation.JsonIdentityInfo
 import com.fasterxml.jackson.annotation.JsonManagedReference
-import com.fasterxml.jackson.annotation.ObjectIdGenerators
 import org.hibernate.Hibernate
 import javax.persistence.*
 
@@ -20,7 +18,7 @@ data class Product
         /* material_type_id ManyToOne */
         @OneToMany(cascade=[CascadeType.ALL], fetch=FetchType.LAZY, mappedBy="product")
         @JsonManagedReference
-        val productAccessories: Set<ProductAccessory>,
+        val productAccessories: List<ProductAccessory>,
 
         @Column(name="name")
         val name: String,
