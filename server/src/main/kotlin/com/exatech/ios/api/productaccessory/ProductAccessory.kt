@@ -17,12 +17,12 @@ data class ProductAccessory
         @Column(name="product_accessory_id")
         val productAccessoryId: Int,
 
-        @ManyToOne(fetch=FetchType.LAZY, cascade=[CascadeType.ALL])
+        @ManyToOne(fetch=FetchType.LAZY, cascade=[CascadeType.PERSIST, CascadeType.REFRESH])
         @JoinColumn(name="product_id")
         @JsonBackReference // I hate you i hate you i hate you i hate you i hate you
         var product: Product,
 
-        @ManyToOne(fetch=FetchType.LAZY, cascade=[CascadeType.ALL])
+        @ManyToOne(fetch=FetchType.LAZY, cascade=[CascadeType.PERSIST, CascadeType.REFRESH])
         @JoinColumn(name="material_type_id")
         val materialType: MaterialType,
 

@@ -1,5 +1,6 @@
 package com.exatech.ios.api.product
 
+import com.exatech.ios.api.materialtype.MaterialType
 import com.exatech.ios.api.productaccessory.ProductAccessory
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
