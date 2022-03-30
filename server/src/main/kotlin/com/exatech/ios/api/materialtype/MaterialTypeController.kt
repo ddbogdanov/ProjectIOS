@@ -12,6 +12,8 @@ class MaterialTypeController(val service: MaterialTypeService) {
     @GetMapping("/{materialTypeId}")
     fun getOne(@PathVariable materialTypeId: Int): ResponseEntity<MaterialType> = ResponseEntity.of(service.findById(materialTypeId))
 
+    //TODO Add POST mapping
+
     @DeleteMapping("/{materialTypeId}")
     fun deleteOne(@PathVariable materialTypeId: Int): ResponseEntity<MaterialType> {
         val responseStatus = service.deleteById(materialTypeId)

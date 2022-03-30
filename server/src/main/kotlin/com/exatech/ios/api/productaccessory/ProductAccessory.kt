@@ -22,7 +22,7 @@ data class ProductAccessory
         @JsonBackReference // I hate you i hate you i hate you i hate you i hate you
         var product: Product,
 
-        @ManyToOne(fetch=FetchType.LAZY, cascade=[CascadeType.PERSIST, CascadeType.REFRESH])
+        @ManyToOne(fetch=FetchType.LAZY)
         @JoinColumn(name="material_type_id")
         val materialType: MaterialType,
 
