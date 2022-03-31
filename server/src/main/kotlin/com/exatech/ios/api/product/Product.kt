@@ -21,7 +21,7 @@ data class Product
         @JsonManagedReference
         val productAccessories: List<ProductAccessory>,
 
-        @ManyToOne(fetch=FetchType.LAZY)
+        @ManyToOne(fetch=FetchType.LAZY, cascade=[CascadeType.REFRESH])
         @JoinColumn(name="material_type_id")
         val materialType: MaterialType,
 

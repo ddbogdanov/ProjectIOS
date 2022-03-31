@@ -38,6 +38,7 @@ class ProductController(val service: ProductService) {
     @PostMapping
     fun saveOne(@RequestBody product: Product): ResponseEntity<Product> {
         //TODO Check if material type exists by its name/type. Do not add a new material type if it already exists. Do same for ProductAccessories
+        //TODO OR maybe pass material type as a query parameter, fetch from database, assign to product, then save. But then what do about accessories? maybe create accessories first?
         val savedProduct = service.save(product)
         return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct)
     }
