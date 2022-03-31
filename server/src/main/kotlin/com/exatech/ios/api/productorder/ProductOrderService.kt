@@ -4,6 +4,7 @@ import com.exatech.ios.api.product.ProductService
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 import java.util.*
 
 @Service
@@ -29,11 +30,11 @@ class ProductOrderService(val db: ProductOrderRepo, val ps: ProductService) {
     }
     fun completeOne(productOrderId: Int): HttpStatus {
         val productOrderOptional = db.findById(productOrderId)
-
         if(productOrderOptional.isEmpty) return HttpStatus.NOT_FOUND
+
         val productOrder = productOrderOptional.get()
         productOrder.completed = true
-
+        productOrder.dateCompleted = LocalDateTime.now()
         db.save(productOrder)
 
         return HttpStatus.OK

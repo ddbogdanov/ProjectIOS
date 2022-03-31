@@ -39,7 +39,7 @@ data class AccessoryOrder
     @CreationTimestamp
     val dateCreated: LocalDateTime,
     @Column(name="date_completed")
-    val dateCompleted: LocalDateTime
+    var dateCompleted: LocalDateTime? = null
 )
 {
     override fun equals(other: Any?): Boolean {
