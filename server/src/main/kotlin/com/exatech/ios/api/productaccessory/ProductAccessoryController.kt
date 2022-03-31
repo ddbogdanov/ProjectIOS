@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity as ResponseEntity
 @RestController
 @RequestMapping("/product-accessories")
 class ProductAccessoryController(val service: ProductAccessoryService) {
+    //TODO Mapping to find the product an accessory belongs to.
 
     @GetMapping
     fun getAll(): List<ProductAccessory> = service.findAll()

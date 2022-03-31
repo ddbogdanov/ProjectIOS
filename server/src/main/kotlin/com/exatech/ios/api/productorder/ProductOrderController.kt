@@ -42,7 +42,7 @@ class ProductOrderController(val service: ProductOrderService) {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(savedProductOrder)
     }
-    @PostMapping("/product/order")
+    @PostMapping("/order/PARAM")
     fun saveOneByProductIdFromParam(@RequestParam productId: Int, @RequestBody productOrder: ProductOrder): ResponseEntity<ProductOrder> {
         val savedProductOrder = service.saveByProductId(productId, productOrder)
             ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
