@@ -26,7 +26,10 @@ data class ProductOrder
     val quantity: Int,
     @Column(name="completed", columnDefinition="boolean default false", nullable=false)
     var completed: Boolean = false
-) {
+
+    //TODO: Date Created
+)
+{
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false

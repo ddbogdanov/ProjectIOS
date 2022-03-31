@@ -33,6 +33,8 @@ data class AccessoryOrder
     val quantity: Int,
     @Column(name="completed", columnDefinition="boolean default false", nullable=false)
     val completed: Boolean = false
+
+    //TODO: Date Created
 )
 {
     override fun equals(other: Any?): Boolean {

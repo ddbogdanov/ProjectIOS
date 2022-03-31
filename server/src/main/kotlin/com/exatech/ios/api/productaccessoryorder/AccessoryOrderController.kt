@@ -1,7 +1,5 @@
 package com.exatech.ios.api.productaccessoryorder
 
-import com.exatech.ios.api.productaccessory.ProductAccessory
-import com.exatech.ios.api.productorder.ProductOrder
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -21,6 +19,9 @@ class AccessoryOrderController(val service: AccessoryOrderService) {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(savedProductOrder)
     }
+
+    //TODO: Edit
+    //TODO: Set Completed
 
     @DeleteMapping("order/{accessoryOrderId}")
     fun deleteOne(@PathVariable accessoryOrderId: Int): ResponseEntity<AccessoryOrder> {

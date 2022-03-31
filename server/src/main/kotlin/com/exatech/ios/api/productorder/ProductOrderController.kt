@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/product")
 class ProductOrderController(val service: ProductOrderService) {
 
+    //TODO: Mapping to get all not completed, and all completed
+
     @GetMapping("/order")
     fun getAll(): List<ProductOrder> = service.findAll()
     @GetMapping("/order/{productOrderId}")
