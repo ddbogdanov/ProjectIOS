@@ -3,6 +3,9 @@ package com.exatech.ios.api.productaccessory
 import com.exatech.ios.api.materialtype.MaterialType
 import com.exatech.ios.api.product.Product
 import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonIdentityInfo
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.ObjectIdGenerators
 
 import org.hibernate.Hibernate
 import javax.persistence.*
@@ -20,6 +23,7 @@ data class ProductAccessory
         @ManyToOne(fetch=FetchType.LAZY, cascade=[CascadeType.PERSIST, CascadeType.REFRESH])
         @JoinColumn(name="product_id")
         @JsonBackReference // I hate you i hate you i hate you i hate you i hate you
+        //@JsonIgnoreProperties("productAccessories", "materialType", "name", "size", "sku")
         var product: Product,
 
         @ManyToOne(fetch=FetchType.LAZY, cascade=[CascadeType.REFRESH])

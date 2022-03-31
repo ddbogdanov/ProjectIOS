@@ -1,6 +1,5 @@
 package com.exatech.ios.api.productaccessoryorder
 
-import com.exatech.ios.api.productorder.ProductOrder
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -12,6 +11,8 @@ class AccessoryOrderController(val service: AccessoryOrderService) {
     fun getAll(): List<AccessoryOrder> = service.findAll()
     @GetMapping("/order/{accessoryOrderId}")
     fun getOne(@PathVariable accessoryOrderId: Int): ResponseEntity<AccessoryOrder> = ResponseEntity.of(service.findById(accessoryOrderId))
+    @GetMapping("/order/completed")
+    fun getByCompletion(@RequestParam areCompleted: Boolean): List<AccessoryOrder> = service.findByCompletion(areCompleted)
 
     @PutMapping("/order/{accessoryOrderId}")
     fun editOne(@PathVariable accessoryOrderId: Int, @RequestBody accessoryOrder: AccessoryOrder): ResponseEntity<AccessoryOrder> {

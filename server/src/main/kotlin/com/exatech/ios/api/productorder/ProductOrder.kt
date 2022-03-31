@@ -3,6 +3,8 @@ package com.exatech.ios.api.productorder
 import com.exatech.ios.api.color.Color
 import com.exatech.ios.api.product.Product
 import org.hibernate.Hibernate
+import org.hibernate.annotations.CreationTimestamp
+import java.time.LocalDateTime
 import javax.persistence.*
 
 @Table(name="product_order")
@@ -25,9 +27,12 @@ data class ProductOrder
     @Column(name="quantity", nullable=false)
     val quantity: Int,
     @Column(name="completed", columnDefinition="boolean default false", nullable=false)
-    var completed: Boolean = false
-
-    //TODO: Date Created
+    var completed: Boolean = false,
+    @Column(name="date_created")
+    @CreationTimestamp
+    val dateCreated: LocalDateTime,
+    @Column(name="date_completed")
+    val dateCompleted: LocalDateTime
 )
 {
     override fun equals(other: Any?): Boolean {

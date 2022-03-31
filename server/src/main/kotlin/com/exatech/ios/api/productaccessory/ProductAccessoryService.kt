@@ -1,6 +1,7 @@
 package com.exatech.ios.api.productaccessory
 
 import com.exatech.ios.api.product.ProductService
+import com.exatech.ios.api.productorder.ProductOrder
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -36,10 +37,5 @@ class ProductAccessoryService(val db: ProductAccessoryRepo, val ps: ProductServi
         }
 
         return HttpStatus.NO_CONTENT
-    }
-
-
-    fun findByProductId(productId: Int): List<ProductAccessory>? { //TODO: Temporary Function!
-        return null//listOf(ProductAccessory(404, null, "Hello World!", 0))
     }
 }

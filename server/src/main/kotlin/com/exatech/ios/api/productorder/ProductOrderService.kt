@@ -10,6 +10,7 @@ import java.util.*
 class ProductOrderService(val db: ProductOrderRepo, val ps: ProductService) {
     fun findAll(): List<ProductOrder> = db.findAll()
     fun findById(productOrderId: Int): Optional<ProductOrder> = db.findById(productOrderId)
+    fun findByCompletion(areCompleted: Boolean): List<ProductOrder> = db.findAllByCompleted(areCompleted)
 
     fun save(productOrder: ProductOrder): ProductOrder {
         return db.save(productOrder)

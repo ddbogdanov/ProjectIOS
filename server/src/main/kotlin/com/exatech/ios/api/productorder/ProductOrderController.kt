@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/product")
 class ProductOrderController(val service: ProductOrderService) {
 
-    //TODO: Mapping to get all not completed, and all completed
-
     @GetMapping("/order")
     fun getAll(): List<ProductOrder> = service.findAll()
     @GetMapping("/order/{productOrderId}")
     fun getOne(@PathVariable productOrderId: Int): ResponseEntity<ProductOrder> = ResponseEntity.of(service.findById(productOrderId))
+    @GetMapping("/order/completed")
+    fun getByCompletion(@RequestParam areCompleted: Boolean): List<ProductOrder> = service.findByCompletion(areCompleted)
 
     @PutMapping("/order/{productOrderId}")
     fun editOne(@PathVariable productOrderId: Int, @RequestBody productOrder: ProductOrder): ResponseEntity<ProductOrder> {

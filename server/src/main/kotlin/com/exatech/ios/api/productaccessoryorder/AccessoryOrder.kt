@@ -5,6 +5,8 @@ import com.exatech.ios.api.productaccessory.ProductAccessory
 import com.exatech.ios.api.productorder.ProductOrder
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import org.hibernate.Hibernate
+import org.hibernate.annotations.CreationTimestamp
+import java.time.LocalDateTime
 import javax.persistence.*
 
 @Table(name="product_accessory_order")
@@ -32,9 +34,12 @@ data class AccessoryOrder
     @Column(name="quantity")
     val quantity: Int,
     @Column(name="completed", columnDefinition="boolean default false", nullable=false)
-    var completed: Boolean = false
-
-    //TODO: Date Created
+    var completed: Boolean = false,
+    @Column(name="date_created")
+    @CreationTimestamp
+    val dateCreated: LocalDateTime,
+    @Column(name="date_completed")
+    val dateCompleted: LocalDateTime
 )
 {
     override fun equals(other: Any?): Boolean {

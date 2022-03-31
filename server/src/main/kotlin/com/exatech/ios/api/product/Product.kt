@@ -2,7 +2,9 @@ package com.exatech.ios.api.product
 
 import com.exatech.ios.api.materialtype.MaterialType
 import com.exatech.ios.api.productaccessory.ProductAccessory
+import com.fasterxml.jackson.annotation.JsonIdentityInfo
 import com.fasterxml.jackson.annotation.JsonManagedReference
+import com.fasterxml.jackson.annotation.ObjectIdGenerators
 import org.hibernate.Hibernate
 import javax.persistence.*
 
