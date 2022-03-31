@@ -24,6 +24,29 @@ class AccessoryOrderService(val db: AccessoryOrderRepo, val accs: ProductAccesso
         return db.save(accessoryOrder)
     }
 
+    fun update(accessoryOrder: AccessoryOrder): AccessoryOrder? {
+        val accessoryOrderOptional = db.findById(accessoryOrder.accessoryOrderId)
+        if (accessoryOrderOptional.isEmpty) return null
+
+        val productAccessoryOptional = accs.findById(accessoryOrderOptional.get().productAccessory.productAccessoryId)
+        return if (productAccessoryOptional.isEmpty) null
+        else {
+            accessoryOrder.productAccessory = productAccessoryOptional.get()
+            db.save(accessoryOrder)
+        }
+    }
+    fun completeOne(accessoryOrderId: Int): HttpStatus {
+        val accessoryOrderOptional = db.findById(accessoryOrderId)
+
+        if(accessoryOrderOptional.isEmpty) return HttpStatus.NOT_FOUND
+        val accessoryOrder = accessoryOrderOptional.get()
+        accessoryOrder.completed = true
+
+        db.save(accessoryOrder)
+
+        return HttpStatus.OK
+    }
+
     @Transactional
     fun deleteById(accessoryOrderId: Int): HttpStatus {
         val delCount = db.deleteByAccessoryOrderId(accessoryOrderId)

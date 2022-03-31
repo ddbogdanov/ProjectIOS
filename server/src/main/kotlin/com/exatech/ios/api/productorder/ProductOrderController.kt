@@ -30,7 +30,7 @@ class ProductOrderController(val service: ProductOrderService) {
 
     /**
      * Redundant POST Mappings for now - not sure which we'll actually need to use for now
-     * Probably the one allowing for query parameters
+     * Probably the 2nd one
      */
     @PostMapping("/order")
     fun saveOne(@RequestBody productOrder: ProductOrder): ResponseEntity<ProductOrder> {

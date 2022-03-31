@@ -1,5 +1,6 @@
 package com.exatech.ios.api.productaccessoryorder
 
+import com.exatech.ios.api.productorder.ProductOrder
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -12,16 +13,26 @@ class AccessoryOrderController(val service: AccessoryOrderService) {
     @GetMapping("/order/{accessoryOrderId}")
     fun getOne(@PathVariable accessoryOrderId: Int): ResponseEntity<AccessoryOrder> = ResponseEntity.of(service.findById(accessoryOrderId))
 
-    @PostMapping("/order")
-    fun saveOneByIdsFromParams(@RequestParam accessoryId: Int, @RequestParam productOrderId: Int, @RequestBody accessoryOrder: AccessoryOrder): ResponseEntity<AccessoryOrder> {
+    @PutMapping("/order/{accessoryOrderId}")
+    fun editOne(@PathVariable accessoryOrderId: Int, @RequestBody accessoryOrder: AccessoryOrder): ResponseEntity<AccessoryOrder> {
+        if(accessoryOrderId != accessoryOrder.accessoryOrderId) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+
+        val updatedOrder = service.update(accessoryOrder) ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+        return ResponseEntity.status(HttpStatus.OK).body(updatedOrder)
+    }
+    @PutMapping("/order/complete/{accessoryOrderId}")
+    fun completeOne(@PathVariable accessoryOrderId: Int): ResponseEntity<AccessoryOrder> {
+        val updateStatus = service.completeOne(accessoryOrderId)
+        return ResponseEntity.status(updateStatus).build()
+    }
+
+    @PostMapping("/{accessoryId}/order/{productOrderId}")
+    fun saveOneByIdsFromParams(@PathVariable accessoryId: Int, @PathVariable productOrderId: Int, @RequestBody accessoryOrder: AccessoryOrder): ResponseEntity<AccessoryOrder> {
         val savedProductOrder = service.saveByAccessoryId(accessoryId, productOrderId, accessoryOrder)
             ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
 
         return ResponseEntity.status(HttpStatus.CREATED).body(savedProductOrder)
     }
-
-    //TODO: Edit
-    //TODO: Set Completed
 
     @DeleteMapping("order/{accessoryOrderId}")
     fun deleteOne(@PathVariable accessoryOrderId: Int): ResponseEntity<AccessoryOrder> {

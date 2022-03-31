@@ -32,7 +32,7 @@ data class AccessoryOrder
     @Column(name="quantity")
     val quantity: Int,
     @Column(name="completed", columnDefinition="boolean default false", nullable=false)
-    val completed: Boolean = false
+    var completed: Boolean = false
 
     //TODO: Date Created
 )
