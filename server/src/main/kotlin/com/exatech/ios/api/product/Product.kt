@@ -18,7 +18,6 @@ data class Product
         @Column(name="product_id")
         val productId: Int,
 
-        /* material_type_id ManyToOne */
         @OneToMany(cascade=[CascadeType.ALL], fetch=FetchType.LAZY, mappedBy="product")
         @JsonManagedReference
         val productAccessories: List<ProductAccessory>,
@@ -30,10 +29,13 @@ data class Product
         @Column(name="name")
         val name: String,
         @Column(name="size")
-        val size: Int,
+        val size: Double,
+        @Column(name="prod_mat_expenditure")
+        val prodMatExpenditure: Double,
         @Column(name="sku")
         val sku: String
-) {
+)
+{
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false

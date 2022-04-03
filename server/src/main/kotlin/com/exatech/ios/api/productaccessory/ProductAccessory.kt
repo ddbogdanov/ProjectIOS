@@ -30,11 +30,14 @@ data class ProductAccessory
         @JoinColumn(name="material_type_id")
         val materialType: MaterialType,
 
-        @Column(name="name")
-        val name: String,
         @Column(name="size")
-        val size: Int
-) {
+        val size: Double,
+        @Column(name="prod_mat_expenditure")
+        val prodMatExpenditure: Double,
+        @Column(name="name")
+        val name: String
+)
+{
         override fun equals(other: Any?): Boolean {
                 if (this === other) return true
                 if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false

@@ -24,7 +24,7 @@ data class AccessoryOrder
 
     @ManyToOne(fetch=FetchType.LAZY, cascade=[CascadeType.REFRESH])
     @JoinColumn(name="product_order_id", nullable=false)
-    @JsonIgnoreProperties("product", "color", "quantity", "completed")
+    @JsonIgnoreProperties("product", "color", "quantity", "completed", "dateCreated", "dateCompleted")
     var productOrder: ProductOrder,
 
     @ManyToOne(fetch=FetchType.LAZY, cascade=[CascadeType.REFRESH])

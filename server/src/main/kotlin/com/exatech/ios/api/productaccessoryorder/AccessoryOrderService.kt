@@ -1,7 +1,6 @@
 package com.exatech.ios.api.productaccessoryorder
 
 import com.exatech.ios.api.productaccessory.ProductAccessoryService
-import com.exatech.ios.api.productorder.ProductOrder
 import com.exatech.ios.api.productorder.ProductOrderService
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service

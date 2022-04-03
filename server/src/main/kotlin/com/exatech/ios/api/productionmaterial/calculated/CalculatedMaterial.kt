@@ -1,26 +1,24 @@
-package com.exatech.ios.api.productionmaterial
+package com.exatech.ios.api.productionmaterial.calculated
 
 import com.exatech.ios.api.color.Color
 import com.exatech.ios.api.materialtype.MaterialType
 import org.hibernate.Hibernate
-import org.hibernate.annotations.CreationTimestamp
-import java.time.LocalDateTime
 import javax.persistence.*
 
-@Table(name="production_material_audit")
+@Table(name="production_material_calculated")
 @Entity
-data class ProductionMaterial
+data class CalculatedMaterial
 (
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name="production_material_id")
-    val productionMaterialId: Int,
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column(name="p_m_calc_id")
+    val productionMaterialCalculatedId: Int,
 
-    @ManyToOne(fetch=FetchType.LAZY, cascade=[CascadeType.REFRESH])
+    @ManyToOne(fetch= FetchType.LAZY, cascade=[CascadeType.REFRESH])
     @JoinColumn(name="color_id")
     val color: Color,
 
-    @ManyToOne(fetch=FetchType.LAZY, cascade=[CascadeType.REFRESH])
+    @ManyToOne(fetch= FetchType.LAZY, cascade=[CascadeType.REFRESH])
     @JoinColumn(name="material_type_id")
     val materialType: MaterialType,
 
@@ -28,26 +26,24 @@ data class ProductionMaterial
     @Column(name="manufacturer")
     val manufacturer: String,
 
-    @Column(name="amount")
+    @Column(name="amount_calculated")
     val amount: Double,
     @Column(name="name")
     val name: String,
-    @CreationTimestamp
-    val dateCreated: LocalDateTime
 )
 {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
-        other as ProductionMaterial
+        other as CalculatedMaterial
 
-        return productionMaterialId != null && productionMaterialId == other.productionMaterialId
+        return productionMaterialCalculatedId != null && productionMaterialCalculatedId == other.productionMaterialCalculatedId
     }
 
     override fun hashCode(): Int = javaClass.hashCode()
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(productionMaterialId = $productionMaterialId )"
+        return this::class.simpleName + "(productionMaterialCalculatedId = $productionMaterialCalculatedId )"
     }
 }

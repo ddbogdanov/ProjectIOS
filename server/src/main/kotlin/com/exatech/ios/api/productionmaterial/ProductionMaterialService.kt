@@ -19,11 +19,9 @@ class ProductionMaterialService(val db: ProductionMaterialRepo) {
     @Transactional
     fun deleteById(productionMaterialId: Int): HttpStatus {
         val delCount = db.deleteByProductionMaterialId(productionMaterialId)
-
         if(delCount < 1) {
             return HttpStatus.NOT_FOUND
         }
-
         return HttpStatus.NO_CONTENT
     }
 }
