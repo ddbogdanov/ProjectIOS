@@ -28,8 +28,8 @@ data class ProductOrder
     val quantity: Int,
     @Column(name="completed", columnDefinition="boolean default false", nullable=false)
     var completed: Boolean = false,
-    @Column(name="date_created")
     @CreationTimestamp
+    @Column(name="date_created", nullable=false, updatable=false)
     val dateCreated: LocalDateTime,
     @Column(name="date_completed")
     var dateCompleted: LocalDateTime? = null

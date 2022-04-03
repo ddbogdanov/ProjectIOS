@@ -33,7 +33,8 @@ data class ProductionMaterial
     @Column(name="name")
     val name: String,
     @CreationTimestamp
-    val dateCreated: LocalDateTime
+    @Column(name="date_inserted",  nullable=false, updatable=false)
+    var dateInserted: LocalDateTime
 )
 {
     override fun equals(other: Any?): Boolean {

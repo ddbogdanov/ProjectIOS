@@ -16,6 +16,11 @@ class ProductionMaterialService(val db: ProductionMaterialRepo) {
         else db.save(productionMaterial)
     }
 
+    fun update(productionMaterial: ProductionMaterial): ProductionMaterial? {
+        if(!db.existsById(productionMaterial.productionMaterialId)) return null
+        return db.save(productionMaterial)
+    }
+
     @Transactional
     fun deleteById(productionMaterialId: Int): HttpStatus {
         val delCount = db.deleteByProductionMaterialId(productionMaterialId)
@@ -24,4 +29,5 @@ class ProductionMaterialService(val db: ProductionMaterialRepo) {
         }
         return HttpStatus.NO_CONTENT
     }
+
 }
