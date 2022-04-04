@@ -1,6 +1,7 @@
 package com.exatech.ios.api.productionmaterial
 
 import com.exatech.ios.api.color.Color
+import com.exatech.ios.api.manufacturer.Manufacturer
 import com.exatech.ios.api.materialtype.MaterialType
 import org.hibernate.Hibernate
 import org.hibernate.annotations.CreationTimestamp
@@ -24,19 +25,29 @@ data class ProductionMaterial
     @JoinColumn(name="material_type_id")
     val materialType: MaterialType,
 
-    //TODO Create DAO and relationships
-    @Column(name="manufacturer")
-    val manufacturer: String,
+    @ManyToOne(fetch=FetchType.LAZY, cascade=[CascadeType.REFRESH])
+    @JoinColumn(name="manufacturer_id")
+    val manufacturer: Manufacturer,
 
     @Column(name="amount")
     val amount: Double,
-    @Column(name="name") //TODO Auto capitalize upon insert or update
-    val name: String,
+    @Column(name="name")
+    var name: String,
     @CreationTimestamp
     @Column(name="date_inserted",  nullable=false, updatable=false)
     var dateInserted: LocalDateTime
 )
 {
+    @PrePersist
+    fun prePersist() = capitalize()
+
+    @PreUpdate
+    fun preUpdate() = capitalize()
+
+    private fun capitalize() {
+        this.name = name.uppercase()
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false

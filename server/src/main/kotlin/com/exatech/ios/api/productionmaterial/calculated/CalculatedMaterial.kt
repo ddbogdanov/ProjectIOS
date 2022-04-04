@@ -1,6 +1,7 @@
 package com.exatech.ios.api.productionmaterial.calculated
 
 import com.exatech.ios.api.color.Color
+import com.exatech.ios.api.manufacturer.Manufacturer
 import com.exatech.ios.api.materialtype.MaterialType
 import org.hibernate.Hibernate
 import javax.persistence.*
@@ -22,9 +23,9 @@ data class CalculatedMaterial
     @JoinColumn(name="material_type_id")
     val materialType: MaterialType,
 
-    //TODO Create DAO and relationships
-    @Column(name="manufacturer")
-    val manufacturer: String,
+    @ManyToOne(fetch=FetchType.LAZY, cascade=[CascadeType.REFRESH])
+    @JoinColumn(name="manufacturer_id")
+    val manufacturer: Manufacturer,
 
     @Column(name="amount_calculated")
     val amount: Double,

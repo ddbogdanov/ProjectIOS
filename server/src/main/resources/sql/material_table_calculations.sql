@@ -8,19 +8,19 @@ BEGIN
 
     IF EXISTS
         (SELECT * FROM production_material_calculated
-                WHERE new.manufacturer = production_material_calculated.manufacturer
+                WHERE new.manufacturer_id = production_material_calculated.manufacturer_id
                 AND new.color_id = production_material_calculated.color_id
                 AND new.material_type_id = production_material_calculated.material_type_id
                 AND new.name = production_material_calculated.name )
     THEN
         UPDATE production_material_calculated
         SET production_material_calculated.amount_calculated = new.amount + production_material_calculated.amount_calculated
-        WHERE new.manufacturer = production_material_calculated.manufacturer
+        WHERE new.manufacturer_id = production_material_calculated.manufacturer_id
         AND new.color_id = production_material_calculated.color_id
         AND new.material_type_id = production_material_calculated.material_type_id
         AND new.name = production_material_calculated.name;
     ELSE
-        INSERT INTO production_material_calculated VALUES(null, new.amount, new.manufacturer, new.name, new.color_id, new.material_type_id);
+        INSERT INTO production_material_calculated VALUES(null, new.amount, new.name, new.color_id, new.manufacturer_id, new.material_type_id);
     END IF;
 
 END;
@@ -33,43 +33,43 @@ CREATE OR REPLACE TRIGGER update_calculate_material_amount
 BEGIN
     IF(new.color_id != old.color_id
         OR new.material_type_id != old.material_type_id
-        OR new.manufacturer != old.manufacturer
+        OR new.manufacturer_id != old.manufacturer_id
         OR new.name != old.name)
     THEN
         UPDATE production_material_calculated
         SET production_material_calculated.amount_calculated = production_material_calculated.amount_calculated - old.amount
-        WHERE old.manufacturer = production_material_calculated.manufacturer
+        WHERE old.manufacturer_id = production_material_calculated.manufacturer_id
         AND old.color_id = production_material_calculated.color_id
         AND old.material_type_id = production_material_calculated.material_type_id
         AND old.name = production_material_calculated.name;
 
         IF(EXISTS(SELECT * FROM production_material_calculated
-                WHERE new.manufacturer = production_material_calculated.manufacturer
+                WHERE new.manufacturer_id = production_material_calculated.manufacturer_id
                 AND new.color_id = production_material_calculated.color_id
                 AND new.material_type_id = production_material_calculated.material_type_id
                 AND new.name = production_material_calculated.name))
         THEN
             UPDATE production_material_calculated
             SET production_material_calculated.amount_calculated = production_material_calculated.amount_calculated + new.amount
-            WHERE new.manufacturer = production_material_calculated.manufacturer
+            WHERE new.manufacturer_id = production_material_calculated.manufacturer_id
             AND new.color_id = production_material_calculated.color_id
             AND new.material_type_id = production_material_calculated.material_type_id
             AND new.name = production_material_calculated.name;
         ELSE
-            INSERT INTO production_material_calculated VALUES(null, new.amount, new.manufacturer, new.name, new.color_id, new.material_type_id);
+            INSERT INTO production_material_calculated VALUES(null, new.amount, new.name, new.color_id, new.manufacturer_id, new.material_type_id);
         END IF;
     ELSE
         IF(new.amount > old.amount) THEN
             UPDATE production_material_calculated
             SET production_material_calculated.amount_calculated = production_material_calculated.amount_calculated + (new.amount - old.amount)
-            WHERE new.manufacturer = production_material_calculated.manufacturer
+            WHERE new.manufacturer_id = production_material_calculated.manufacturer_id
             AND new.color_id = production_material_calculated.color_id
             AND new.material_type_id = production_material_calculated.material_type_id
             AND new.name = production_material_calculated.name;
         ELSEIF(new.amount < old.amount) THEN
             UPDATE production_material_calculated
             SET production_material_calculated.amount_calculated = production_material_calculated.amount_calculated - (old.amount - new.amount)
-            WHERE new.manufacturer = production_material_calculated.manufacturer
+            WHERE new.manufacturer_id = production_material_calculated.manufacturer_id
             AND new.color_id = production_material_calculated.color_id
             AND new.material_type_id = production_material_calculated.material_type_id
             AND new.name = production_material_calculated.name;
@@ -86,9 +86,9 @@ BEGIN
 
     UPDATE production_material_calculated
     SET production_material_calculated.amount_calculated = production_material_calculated.amount_calculated - old.amount
-    WHERE old.manufacturer = production_material_calculated.manufacturer
+    WHERE old.manufacturer_id = production_material_calculated.manufacturer_id
     AND old.color_id = production_material_calculated.color_id
     AND old.material_type_id = production_material_calculated.material_type_id
     AND old.name = production_material_calculated.name;
 
-END
+END;
