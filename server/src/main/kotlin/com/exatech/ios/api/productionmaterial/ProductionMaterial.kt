@@ -30,7 +30,7 @@ data class ProductionMaterial
 
     @Column(name="amount")
     val amount: Double,
-    @Column(name="name")
+    @Column(name="name") //TODO Auto capitalize upon insert or update
     val name: String,
     @CreationTimestamp
     @Column(name="date_inserted",  nullable=false, updatable=false)

@@ -11,7 +11,6 @@ class ProductionMaterialService(val db: ProductionMaterialRepo) {
     fun findById(productionMaterialId: Int): Optional<ProductionMaterial> = db.findById(productionMaterialId)
 
     fun save(productionMaterial: ProductionMaterial): ProductionMaterial? {
-        //TODO Exists by name and manufacturer do NOT save, add amounts instead.
         return if(db.existsById(productionMaterial.productionMaterialId)) null
         else db.save(productionMaterial)
     }

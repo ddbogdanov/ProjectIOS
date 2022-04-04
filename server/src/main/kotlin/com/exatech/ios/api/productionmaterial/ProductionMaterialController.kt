@@ -24,7 +24,7 @@ class ProductionMaterialController(val service: ProductionMaterialService) {
     @PostMapping
     fun saveOne(@RequestBody productionMaterial: ProductionMaterial): ResponseEntity<ProductionMaterial> {
         val savedProductionMaterial = service.save(productionMaterial)
-            ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+            ?: return ResponseEntity.status(HttpStatus.CONFLICT).build()
 
         return ResponseEntity.status(HttpStatus.CREATED).body(savedProductionMaterial)
     }
