@@ -2,6 +2,8 @@ package com.exatech.ios.api.productorder
 
 import com.exatech.ios.api.color.Color
 import com.exatech.ios.api.product.Product
+import com.exatech.ios.api.productionmaterial.calculated.CalculatedMaterial
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import org.hibernate.Hibernate
 import org.hibernate.annotations.CreationTimestamp
 import java.time.LocalDateTime
@@ -24,10 +26,17 @@ data class ProductOrder
     @JoinColumn(name="color_id")
     val color: Color,
 
+    @ManyToOne(fetch=FetchType.LAZY, cascade=[CascadeType.REFRESH]) //Specifies the material used to complete the order
+    @JoinColumn(name="p_m_calc_id")
+    @JsonIgnoreProperties("color", "materialType", "manufacturer", "amount", "name")
+    var productionCalcMaterialUsed: CalculatedMaterial,
+
     @Column(name="quantity", nullable=false)
     val quantity: Int,
     @Column(name="completed", columnDefinition="boolean default false", nullable=false)
     var completed: Boolean = false,
+    @Column(name="comments")
+    var comments: String,
     @CreationTimestamp
     @Column(name="date_created", nullable=false, updatable=false)
     val dateCreated: LocalDateTime,

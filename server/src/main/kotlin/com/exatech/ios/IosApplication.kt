@@ -7,7 +7,6 @@ import org.springframework.boot.runApplication
 class IosApplication
 
 fun main(args: Array<String>) {
-    //TODO Add 'comment' field to productOrder
     //TODO Create user table and basic validation
     runApplication<IosApplication>(*args)
 }

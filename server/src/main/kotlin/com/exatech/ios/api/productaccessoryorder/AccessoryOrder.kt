@@ -2,6 +2,7 @@ package com.exatech.ios.api.productaccessoryorder
 
 import com.exatech.ios.api.color.Color
 import com.exatech.ios.api.productaccessory.ProductAccessory
+import com.exatech.ios.api.productionmaterial.calculated.CalculatedMaterial
 import com.exatech.ios.api.productorder.ProductOrder
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import org.hibernate.Hibernate
@@ -30,6 +31,11 @@ data class AccessoryOrder
     @ManyToOne(fetch=FetchType.LAZY, cascade=[CascadeType.REFRESH])
     @JoinColumn(name="color_id")
     val color: Color,
+
+    @ManyToOne(fetch=FetchType.LAZY, cascade=[CascadeType.REFRESH]) //Specifies the material used to complete the order
+    @JoinColumn(name="p_m_calc_id")
+    @JsonIgnoreProperties("color", "materialType", "manufacturer", "amount", "name")
+    var productionCalcMaterialUsed: CalculatedMaterial,
 
     @Column(name="quantity")
     val quantity: Int,

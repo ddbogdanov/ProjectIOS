@@ -1,6 +1,7 @@
 package com.exatech.ios.api.productorder
 
 import com.exatech.ios.api.product.ProductService
+import com.exatech.ios.api.productionmaterial.calculated.CalculatedMaterialService
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -8,7 +9,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 @Service
-class ProductOrderService(val db: ProductOrderRepo, val ps: ProductService) {
+class ProductOrderService(val db: ProductOrderRepo, val ps: ProductService, val cms: CalculatedMaterialService) {
     fun findAll(): List<ProductOrder> = db.findAll()
     fun findById(productOrderId: Int): Optional<ProductOrder> = db.findById(productOrderId)
     fun findByCompletion(areCompleted: Boolean): List<ProductOrder> = db.findAllByCompleted(areCompleted)
@@ -28,11 +29,15 @@ class ProductOrderService(val db: ProductOrderRepo, val ps: ProductService) {
             db.save(productOrder)
         }
     }
-    fun completeOne(productOrderId: Int): HttpStatus {
+    fun completeOne(productOrderId: Int, calcMaterialUsedId: Int): HttpStatus {
         val productOrderOptional = db.findById(productOrderId)
         if(productOrderOptional.isEmpty) return HttpStatus.NOT_FOUND
 
+        val materialOptional = cms.findOne(calcMaterialUsedId)
+        if(materialOptional.isEmpty) return HttpStatus.NOT_FOUND
+
         val productOrder = productOrderOptional.get()
+        productOrder.productionCalcMaterialUsed = materialOptional.get()
         productOrder.completed = true
         productOrder.dateCompleted = LocalDateTime.now()
         db.save(productOrder)

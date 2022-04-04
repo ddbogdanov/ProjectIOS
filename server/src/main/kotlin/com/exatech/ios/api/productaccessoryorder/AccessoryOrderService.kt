@@ -1,6 +1,7 @@
 package com.exatech.ios.api.productaccessoryorder
 
 import com.exatech.ios.api.productaccessory.ProductAccessoryService
+import com.exatech.ios.api.productionmaterial.calculated.CalculatedMaterialService
 import com.exatech.ios.api.productorder.ProductOrderService
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
@@ -9,7 +10,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 @Service
-class AccessoryOrderService(val db: AccessoryOrderRepo, val accs: ProductAccessoryService, val pos: ProductOrderService) {
+class AccessoryOrderService(val db: AccessoryOrderRepo, val accs: ProductAccessoryService, val pos: ProductOrderService, val cms: CalculatedMaterialService) {
     fun findAll(): List<AccessoryOrder> = db.findAll()
     fun findById(accessoryOrderId: Int): Optional<AccessoryOrder> = db.findById(accessoryOrderId)
     fun findByCompletion(areCompleted: Boolean): List<AccessoryOrder> = db.findAllByCompleted(areCompleted)
@@ -37,11 +38,15 @@ class AccessoryOrderService(val db: AccessoryOrderRepo, val accs: ProductAccesso
             db.save(accessoryOrder)
         }
     }
-    fun completeOne(accessoryOrderId: Int): HttpStatus {
+    fun completeOne(accessoryOrderId: Int, calcMaterialUsedId: Int): HttpStatus {
         val accessoryOrderOptional = db.findById(accessoryOrderId)
         if(accessoryOrderOptional.isEmpty) return HttpStatus.NOT_FOUND
 
+        val materialOptional = cms.findOne(calcMaterialUsedId)
+        if(materialOptional.isEmpty) return HttpStatus.NOT_FOUND
+
         val accessoryOrder = accessoryOrderOptional.get()
+        accessoryOrder.productionCalcMaterialUsed = materialOptional.get()
         accessoryOrder.completed = true
         accessoryOrder.dateCompleted = LocalDateTime.now()
         db.save(accessoryOrder)

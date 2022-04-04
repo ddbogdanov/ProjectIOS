@@ -1,5 +1,6 @@
 package com.exatech.ios.api.productaccessoryorder
 
+import com.exatech.ios.api.productionmaterial.calculated.CalculatedMaterial
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -22,8 +23,8 @@ class AccessoryOrderController(val service: AccessoryOrderService) {
         return ResponseEntity.status(HttpStatus.OK).body(updatedOrder)
     }
     @PutMapping("/order/complete/{accessoryOrderId}")
-    fun completeOne(@PathVariable accessoryOrderId: Int): ResponseEntity<AccessoryOrder> {
-        val updateStatus = service.completeOne(accessoryOrderId)
+    fun completeOne(@PathVariable accessoryOrderId: Int, @RequestParam calcMaterialUsedId: Int): ResponseEntity<AccessoryOrder> {
+        val updateStatus = service.completeOne(accessoryOrderId, calcMaterialUsedId)
         return ResponseEntity.status(updateStatus).build()
     }
 
