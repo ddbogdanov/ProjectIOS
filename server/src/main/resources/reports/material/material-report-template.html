@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Material Report</title>
+    <link rel="stylesheet" href="./style/material-report-style.css">
+
+</head>
+
+<body>
+<header class="header">
+    <div class="header-image">
+        <img src="./img/logo.png" width="200px">
+    </div>
+
+    <div class="header-note">
+        <p id="timestamp">Generated On: 00/00/00</p>
+    </div>
+</header>
+<div class="title" >
+    <h1>Current Materials Report</h1>
+</div>
+
+<hr style="margin-left: 20px; margin-right: 20px;">
+
+<div class="summary">
+    <div class="most-div">
+        <p>You have the most of:</p>
+        <h4 id="most-name" style="max-width: 70%; margin: 0 auto;">ORAFOL 651 INTERMEDIATE CAL</h4>
+        <p id="most-color" style="margin: 10px 0 0;">Color: WHITE</p>
+        <p id="most-type" style="margin: 0;">Type: VINYL</p>
+        <p id="most-amount" style="margin: 0;">Amount: 4876"</p>
+    </div>
+    <div class="vl" style="height: 120px; margin-top: 50px"></div>
+    <div class="least-div">
+        <p>You have the least of:</p>
+        <h4 id="least-name" style="max-width: 70%; margin: 0 auto;">ORAFOL 651 INTERMEDIATE CAL</h4>
+        <p id="least-color" style="margin: 10px 0 0;">Color: BROWN</p>
+        <p id="least-type" style="margin: 0;">Type: VINYL</p>
+        <p id="least-amount" style="margin: 0;">Amount: 124"</p>
+    </div>
+</div>
+
+<hr style="margin-top: 20px; margin-left: 20px; margin-right: 20px;">
+
+<div class="table-div">
+    <h2>Calculated Materials</h2>
+    <table class="mat-table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Manufacturer</th>
+            <th>Color</th>
+            <td>Amount</td>
+        </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+    </table>
+</div>
+
+</body>
+</html>

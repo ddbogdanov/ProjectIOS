@@ -1,6 +1,5 @@
 package com.exatech.ios.api.productaccessoryorder
 
-import com.exatech.ios.api.productionmaterial.calculated.CalculatedMaterial
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
