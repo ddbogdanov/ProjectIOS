@@ -23,7 +23,8 @@ class ReportService(val cms: CalculatedMaterialService) {
         val doc: Document = Jsoup.parse(materialReportTemplate.readText())
 
 
-        val calculatedMaterials = cms.findAll()
+        var calculatedMaterials = cms.findAll()
+        calculatedMaterials = calculatedMaterials.sortedByDescending { it.amount }
         val leastAmountMaterial = calculatedMaterials.minWithOrNull(Comparator.comparingDouble { it.amount }) ?: return null
         val mostAmountMaterial = calculatedMaterials.maxWithOrNull(Comparator.comparingDouble { it.amount }) ?: return null
 

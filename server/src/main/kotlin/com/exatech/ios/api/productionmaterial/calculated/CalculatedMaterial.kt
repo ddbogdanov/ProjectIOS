@@ -4,6 +4,8 @@ import com.exatech.ios.api.color.Color
 import com.exatech.ios.api.manufacturer.Manufacturer
 import com.exatech.ios.api.materialtype.MaterialType
 import org.hibernate.Hibernate
+import org.hibernate.annotations.CreationTimestamp
+import java.time.LocalDateTime
 import javax.persistence.*
 
 @Table(name="production_material_calculated")

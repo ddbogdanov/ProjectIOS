@@ -69,3 +69,10 @@ table, td, th {
     margin-left: auto;
     margin-right: auto;
 }
+
+.footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}

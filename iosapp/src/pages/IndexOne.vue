@@ -1,7 +1,7 @@
 <template>
-  
+
   <q-page class="row items-center justify-evenly">
-   
+
 
     <q-body>
       <q-form
@@ -38,9 +38,9 @@
       </div>
     </q-form>
 
-   
+
     </q-body>
-   
+
   </q-page>
 </template>
 
