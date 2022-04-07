@@ -17,7 +17,7 @@ data class Account
     //@JsonProperty(access=JsonProperty.Access.WRITE_ONLY)
     var password: String,
     @Column(name="role")
-    val role: String
+    var role: String
 )
 {
     override fun equals(other: Any?): Boolean {
