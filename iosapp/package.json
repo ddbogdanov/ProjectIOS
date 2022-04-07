@@ -1,9 +1,9 @@
 {
-  "name": "quasar-project",
+  "name": "project-ios",
   "version": "0.0.1",
-  "description": "A Quasar Project",
-  "productName": "Quasar App",
-  "author": "christorubio <chrisrubio1997@gmail.com>",
+  "description": "Internal ordering system",
+  "productName": "ProjectIOS",
+  "author": "",
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.vue ./",

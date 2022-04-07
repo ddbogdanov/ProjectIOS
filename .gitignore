@@ -7,6 +7,9 @@
 # VS Code #
 .vscode
 
+### Frontend ###
+iosapp/node_modules
+
 ### Backend ###
 HELP.md
 target/
@@ -49,4 +52,4 @@ target/
 
 # local env files
 **.env.local
-**.env.*.local
+**.env.*.localiosapp.iml
