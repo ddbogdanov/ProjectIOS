@@ -7,8 +7,9 @@ import com.itextpdf.html2pdf.HtmlConverter
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.springframework.stereotype.Service
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.FileOutputStream
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -16,14 +17,16 @@ import java.time.format.DateTimeFormatter
 @Service
 class ReportService(val cms: CalculatedMaterialService) {
 
-    fun generateMaterialReport(inString: String): ByteArray? {
+    fun generateMaterialReport(): ByteArrayInputStream? {
+        val byteOutputStream = ByteArrayOutputStream()
+        val materialReportTemplate = File("server/src/main/resources/reports/material/material-report-template.html")
+        val doc: Document = Jsoup.parse(materialReportTemplate.readText())
+
+
         val calculatedMaterials = cms.findAll()
         val leastAmountMaterial = calculatedMaterials.minWithOrNull(Comparator.comparingDouble { it.amount }) ?: return null
         val mostAmountMaterial = calculatedMaterials.maxWithOrNull(Comparator.comparingDouble { it.amount }) ?: return null
 
-
-        val htmlFile = File("server/src/main/resources/reports/material/material-report-template.html")
-        val doc: Document = Jsoup.parse(htmlFile.readText())
 
         doc.getElementById("timestamp")?.text("Generated On: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy")))
 
@@ -41,7 +44,14 @@ class ReportService(val cms: CalculatedMaterialService) {
 
         // Populate table with materials
         for(m: CalculatedMaterial in calculatedMaterials) {
-            doc.getElementById("table-body")?.append("<tr><td>" + m.name + "</td><td>" + m.materialType.type + "</td><td>" + m.manufacturer.manufacturer + "</td><td>" + m.color.color + "</td><td>" + m.amount + "</td>")
+            doc.getElementById("table-body")?.append(
+                "<tr>" +
+                    "<td>" + m.name + "</td>" +
+                    "<td>" + m.materialType.type + "</td>" +
+                    "<td>" + m.manufacturer.manufacturer + "</td>" +
+                    "<td>" + m.color.color + "</td>" +
+                    "<td>" + m.amount + "</td>" +
+                "</tr>")
         }
 
 
@@ -49,10 +59,10 @@ class ReportService(val cms: CalculatedMaterialService) {
         converterProperties.baseUri = "./server/src/main/resources/reports/material"
         HtmlConverter.convertToPdf(
             doc.outerHtml(),
-            FileOutputStream("server/src/main/kotlin/com/exatech/ios/api/report/anpdf.pdf"),
+            byteOutputStream,
             converterProperties)
 
-        return ByteArray(1)
+        return ByteArrayInputStream(byteOutputStream.toByteArray())
     }
 }
 
