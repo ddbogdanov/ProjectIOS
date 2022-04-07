@@ -76,3 +76,21 @@ table, td, th {
     bottom: 0;
     width: 100%;
 }
+
+
+.additions {
+    margin: 0 auto;
+    display: inline-block;
+    width: 45%;
+    text-align: center;
+    vertical-align: top;
+    height: 50%;
+}
+.deductions {
+    margin: 0 auto;
+    display: inline-block;
+    width: 45%;
+    text-align: center;
+    vertical-align: top;
+    height: 50%;
+}

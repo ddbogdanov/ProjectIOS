@@ -2,6 +2,8 @@ package com.exatech.ios.api.report
 
 import com.exatech.ios.api.productionmaterial.calculated.CalculatedMaterial
 import com.exatech.ios.api.productionmaterial.calculated.CalculatedMaterialService
+import com.exatech.ios.api.productionmaterial.usage.MaterialUsageAudit
+import com.exatech.ios.api.productionmaterial.usage.MaterialUsageAuditService
 import com.itextpdf.html2pdf.ConverterProperties
 import com.itextpdf.html2pdf.HtmlConverter
 import org.jsoup.Jsoup
@@ -10,12 +12,13 @@ import org.springframework.stereotype.Service
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 
 @Service
-class ReportService(val cms: CalculatedMaterialService) {
+class ReportService(val cms: CalculatedMaterialService, val muas: MaterialUsageAuditService) {
 
     fun generateMaterialReport(): ByteArrayInputStream? {
         val byteOutputStream = ByteArrayOutputStream()
@@ -55,6 +58,49 @@ class ReportService(val cms: CalculatedMaterialService) {
                 "</tr>")
         }
 
+
+        val converterProperties = ConverterProperties()
+        converterProperties.baseUri = "./server/src/main/resources/reports/material"
+        HtmlConverter.convertToPdf(
+            doc.outerHtml(),
+            byteOutputStream,
+            converterProperties)
+
+        return ByteArrayInputStream(byteOutputStream.toByteArray())
+    }
+
+    fun generateMaterialUsageReport(): ByteArrayInputStream? {
+        val byteOutputStream = ByteArrayOutputStream()
+        val materialUsageReportTemplate = File("server/src/main/resources/reports/material/material-usage-report-template.html")
+        val doc: Document = Jsoup.parse(materialUsageReportTemplate.readText())
+
+        var pastWeekMaterialAudits = muas.findAllWithinLastWeek()
+
+        val totalDeductions = pastWeekMaterialAudits.sumOf { if (it.deltaAmount < 0.0) it.deltaAmount else 0.0 }
+        val totalAdditions = pastWeekMaterialAudits.sumOf { if (it.deltaAmount > 0.0) it.deltaAmount else 0.0 }
+        pastWeekMaterialAudits = pastWeekMaterialAudits.sortedByDescending { it.datePerformed }
+
+
+        doc.getElementById("timestamp")?.text("Generated On: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy")))
+
+        doc.getElementById("mat-deductions")?.text(totalDeductions.toString() + "\"")
+        doc.getElementById("mat-additions")?.text(totalAdditions.toString() + "\"")
+        doc.getElementById("net-val")?.text((totalAdditions+totalDeductions).toString() + "\"")
+        doc.getElementById("week-of-report")?.text("Week of: "
+                + LocalDate.now().minusWeeks(1).format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))
+                + " - "
+                + LocalDate.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy")))
+
+        for(m: MaterialUsageAudit in pastWeekMaterialAudits) {
+            doc.getElementById("table-body")?.append(
+                "<tr>" +
+                        "<td>" + m.color.color + "</td>" +
+                        "<td>" + m.materialType.type + "</td>" +
+                        "<td>" + m.manufacturer.manufacturer + "</td>" +
+                        "<td>" + m.datePerformed.format(DateTimeFormatter.ofPattern("MM-dd-yyy")) + "</td>" +
+                        "<td>" + m.deltaAmount + "</td>" +
+                        "</tr>")
+        }
 
         val converterProperties = ConverterProperties()
         converterProperties.baseUri = "./server/src/main/resources/reports/material"

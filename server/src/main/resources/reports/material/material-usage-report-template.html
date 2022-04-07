@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Material Usage Report</title>
+    <link rel="stylesheet" href="./style/material-report-style.css">
+</head>
+<body>
+
+<header class="header">
+    <div class="header-image">
+        <img src="./img/logo.png" width="200px">
+    </div>
+
+    <div class="header-note">
+        <p id="timestamp">Generated On: 00/00/00</p>
+    </div>
+</header>
+<div class="title" >
+    <h1>Material Usage Report</h1>
+</div>
+
+<hr style="margin-left: 20px; margin-right: 20px;">
+
+<div class="summary" style="height:250px">
+    <div class="deductions">
+        <p>Material Deductions Totaled: </p>
+        <h3 id="mat-deductions">500"</h3>
+        <p>This Week.</p>
+    </div>
+    <div class="vl" style="height: 120px; margin-top: 20px"></div>
+    <div class="additions">
+        <p>Material Additions Totaled: </p>
+        <h3 id="mat-additions">500"</h3>
+        <p>This Week.</p>
+    </div>
+    <hr style=" margin-right: 0px;">
+    <div class="net" style="text-align: left">
+        <p>Net:</p>
+        <h3 id="net-val">0"</h3>
+    </div>
+</div>
+
+<hr style="margin-left: 20px; margin-right: 20px;">
+
+<div class="table-div">
+    <h2>Material Usage This Past Week</h2>
+    <p1 id="week-of-report">Week of: 00/00/00 - 00/00/00</p1>
+    <table class="mat-table">
+        <thead>
+        <tr>
+            <th>Color</th>
+            <th>Type</th>
+            <th>Manufacturer</th>
+            <th>Date Performed</th>
+            <th>Delta</th>
+        </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+    </table>
+</div>
+
+<footer class="footer" style="display: inline-block">
+    <img src="./img/exatech-logo.png" width="100px" style="float: right; margin-right: 20px; margin-bottom: 20px;">
+</footer>
+
+</body>
+</html>

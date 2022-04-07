@@ -16,5 +16,7 @@ class MaterialUsageAuditController(val service: MaterialUsageAuditService) {
     fun getAll(): List<MaterialUsageAudit> = service.findAll()
     @GetMapping("/{materialUsageAuditId}")
     fun getOne(@PathVariable materialUsageAuditId: Int): ResponseEntity<MaterialUsageAudit> = ResponseEntity.of(service.findOne(materialUsageAuditId))
+    @GetMapping("/week")
+    fun getMaterialUsageFromOneWeek(): List<MaterialUsageAudit> = service.findAllWithinLastWeek()
 
 }

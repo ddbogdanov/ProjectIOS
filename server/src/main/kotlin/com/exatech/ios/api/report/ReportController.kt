@@ -33,4 +33,19 @@ class ReportController(val service: ReportService) {
             .contentType(MediaType.APPLICATION_PDF)
             .body(InputStreamResource(bis))
     }
+
+    @GetMapping("/material-usage")
+    fun getMaterialUsageReport(): ResponseEntity<Any?> {
+        val bis: ByteArrayInputStream = service.generateMaterialUsageReport()
+            ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+
+        val headers = HttpHeaders()
+        headers.add("Content-Disposition", "inline; filename=materialusagereport.pdf")
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .contentType(MediaType.APPLICATION_PDF)
+            .body(InputStreamResource(bis))
+    }
+
 }

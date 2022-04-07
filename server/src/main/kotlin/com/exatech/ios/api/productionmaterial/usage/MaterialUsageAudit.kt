@@ -33,7 +33,7 @@ data class MaterialUsageAudit
     val deltaAmount: Double,
 
     @Column(name="date_performed",  nullable=false, updatable=false)
-    var dateInserted: LocalDateTime
+    var datePerformed: LocalDateTime
 )
 {
     override fun equals(other: Any?): Boolean {
