@@ -9,7 +9,7 @@
 
 ### Frontend ###
 iosapp/node_modules
-
+*.env
 ### Backend ###
 HELP.md
 target/

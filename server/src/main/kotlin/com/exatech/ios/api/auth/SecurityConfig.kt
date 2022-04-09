@@ -8,6 +8,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 
 @Configuration
@@ -32,7 +35,9 @@ class SecurityConfig(val authService: AuthenticationService): WebSecurityConfigu
             .authorizeRequests().antMatchers("/color").hasAnyRole("admin")
             .and()
             .httpBasic()
-        http.csrf().disable().cors().disable()
+            .and()
+            .cors()
+        http.csrf().disable()
         http.headers().frameOptions().disable()
     }
 
@@ -41,5 +46,12 @@ class SecurityConfig(val authService: AuthenticationService): WebSecurityConfigu
             .eraseCredentials(true)
             .userDetailsService(authService)
             .passwordEncoder(passwordEncoder())
+    }
+
+    @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource? {
+        val source = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", CorsConfiguration().applyPermitDefaultValues())
+        return source
     }
 }
