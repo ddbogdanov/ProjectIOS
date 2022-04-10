@@ -15,7 +15,6 @@
                             <el-button-group style="margin-top: 10px;">
                                 <el-button type="success" plain round :icon="DocumentAdd" @click="drawer=true">Create New Product</el-button>
                             </el-button-group>
-
                         </el-col>
                     </el-row>
 
@@ -115,7 +114,7 @@
                 </el-table>
             </el-main>
             <el-drawer v-model="drawer" title="Add Product" direction="ltr">
-                <ProductForm :product='selectedProduct'/>
+                <ProductForm :productProp='selectedProduct'/>
             </el-drawer>
         </el-container>
     </section>
@@ -140,8 +139,13 @@ export default {
             loadingTable: false,
             drawer: ref(false),
             Delete, Search, Refresh, Edit, DocumentAdd,
-            selectedProduct: 0
+            selectedProduct: { }
         }
+    },
+    mounted() {
+        this.$bus.on('cancelProductForm', drawer => {
+            this.drawer = drawer
+        })
     },
     created() {
         this.fetchProducts()
