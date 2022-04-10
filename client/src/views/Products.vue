@@ -16,8 +16,10 @@
                 </el-container>
             </el-aside>
             <el-main class="products-table-main">
-                <el-table :data="products.filter((data) => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
-                            class="products-table">
+                <el-table :data="products.filter((data) => !search || data.name.toLowerCase().includes(search.toLowerCase()) || data.sku.includes(search))"
+                            class="products-table" v-loading="loadingTable"
+                            stripe height="100%">
+
                     <el-table-column type="expand" #default="scope">
                         <el-table :data="products[(products.indexOf(scope.row))].productAccessories" style="padding-left: 45px" max-height="200px">
                             <el-table-column prop="name" label="Name"></el-table-column>
@@ -25,25 +27,47 @@
                             <el-table-column prop="materialType.type" label="Material Type"></el-table-column>
                         </el-table>
                     </el-table-column>
-                    <el-table-column prop="productId" label="ID" width="70" sortable></el-table-column>
+
                     <el-table-column>
+
                         <template #header>
                             <el-row justify="space-around" align="center">
                                 <el-col :span="2" >
-                                    <label style="display: inline">Products</label>
+                                    <label>Products</label>
                                 </el-col>
-                                <el-col :span="6" style="margin-right:auto;">
-                                    <el-input v-model="search" size="small" placeholder="Search by name"/>
+                                <el-col :span="5" style="margin-left:auto;">
+                                    <el-input v-model="search" size="small" placeholder="Search by name or SKU" :suffix-icon="Search"/>
                                 </el-col>
                             </el-row>
                         </template>
+
                         <el-table-column prop="name" label="Name" sortable></el-table-column>
                         <el-table-column prop="sku" label="SKU"></el-table-column>
-                        <el-table-column prop="size" label="Size"></el-table-column>
+
+                        <el-table-column label="Size">
+                            <el-table-column prop="size" label="Product Size (in)"></el-table-column>
+                            <el-table-column prop="prodMatExpenditure" label="Material to Produce (in)"></el-table-column>
+                        </el-table-column>
+
                         <el-table-column label="Actions" align="right">
                             <template #default="scope">
-                                <el-button :icon="Edit" type="primary" circle @click="alert('edit')"></el-button>
-                                <el-button :icon="Delete" type="danger" circle @click.stop="handleDelete(scope.$index, scope.row)"></el-button>
+
+                                <el-tooltip effect="light" content="Edit" placement="left">
+                                    <el-button :icon="Edit" type="primary" circle @click="handleEdit(scope.$index, scope.row)"></el-button>
+                                </el-tooltip>
+
+                                <el-popconfirm
+                                    :title="'Are you sure you want to delete SKU: ' + scope.row.sku + '?'"
+                                    confirm-button-type="danger"
+                                    cancel-button-type="info"
+                                    cancel-button-text="No, Dont Delete"
+                                    icon-color="red"
+                                    @confirm.stop="handleDelete(scope.$index, scope.row)"
+                                >
+                                    <template #reference>
+                                        <el-button :icon="Delete" type="danger" circle></el-button>
+                                    </template>
+                                </el-popconfirm>
                             </template>
                         </el-table-column>
                     </el-table-column>
@@ -57,7 +81,8 @@
 
 <script>
 import axios from "axios";
-import {Delete, Edit} from '@element-plus/icons-vue'
+import {Delete, Edit, Search} from '@element-plus/icons-vue'
+import {ElMessage} from "element-plus";
 
 export default {
     name: "Products",
@@ -66,7 +91,9 @@ export default {
         return {
             products: [ ],
             search: '',
+            loadingTable: false,
             Delete,
+            Search,
             Edit
         }
     },
@@ -75,28 +102,43 @@ export default {
     },
     methods: {
         fetchProducts() {
+            this.loadingTable = true
             let apiUrl = "/product"
 
             axios.get(apiUrl).then((res) => {
                 this.products = res.data
+                this.loadingTable = false
             }).catch(error => {
                 alert(error)
+            })
+        },
+        handleEdit(index, row) {
+            console.log(index, row)
+            ElMessage( {
+                message: "Editing!",
+                type: "info"
             })
         },
         handleDelete(index, row) {
             let apiUrl = "/product/" + row.productId
 
-            if(window.confirm("Are you sure you want to delete product " + row.sku + "?")) {
-                axios.delete(apiUrl).then(() => {
-                    this.products.splice(index, 1)
-                }).catch(error => {
-                    alert(error)
-                })
-            }
+            axios.delete(apiUrl).then(() => {
+                this.products.splice(this.products.indexOf(row), 1)
+            }).catch(error => {
+                alert(error)
+            })
         }
     }
 
 }
+
+/*getReport() {
+    axios.get("/report/calculated-material", {responseType: 'blob'}).then((res) => {
+        window.open(URL.createObjectURL(res.data))
+    }).catch(error => {
+        alert(error)
+    })
+}*/
 
 </script>
 
@@ -133,6 +175,9 @@ export default {
 
     .products-table-main {
         max-height: 100%;
+    }
+    .products-table {
+        height: 100%;
     }
 
     #products-total-column {
