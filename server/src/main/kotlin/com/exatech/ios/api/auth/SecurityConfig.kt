@@ -11,6 +11,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import org.springframework.web.servlet.config.annotation.CorsRegistry
+
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
+import java.util.*
 
 
 @Configuration
@@ -50,8 +55,13 @@ class SecurityConfig(val authService: AuthenticationService): WebSecurityConfigu
 
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource? {
+        val corsConfig = CorsConfiguration()
+        corsConfig.allowedOrigins = listOf("http://localhost:8080")
+        corsConfig.allowedMethods = listOf("GET", "POST", "PUT", "DELETE")
+
         val source = UrlBasedCorsConfigurationSource()
-        source.registerCorsConfiguration("/**", CorsConfiguration().applyPermitDefaultValues())
+        source.registerCorsConfiguration("/**", corsConfig)
+
         return source
     }
 }

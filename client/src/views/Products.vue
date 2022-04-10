@@ -3,8 +3,12 @@
         <el-container class="products-view-container">
             <el-aside class="products-dash-aside">
                 <el-container class="products-dash-container">
-                    <el-header class="el-header"><h1 id="products-aside-label">PRODUCTS</h1></el-header>
+                    <el-header class="el-header">
+                        <h1 id="products-aside-label">PRODUCTS</h1>
+                    </el-header>
+
                     <el-divider/>
+
                     <el-col id="products-total-column">
                         <h1 id="products-total-label">Total Products:</h1>
                         <label id="products-count-label">{{products.length}}</label>
@@ -13,14 +17,15 @@
             </el-aside>
             <el-main class="products-table-main">
                 <el-table :data="products.filter((data) => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
-                            class="products-table" :default-sort="{prop: 'name', order: 'descending'}">
+                            class="products-table">
                     <el-table-column type="expand" #default="scope">
-                        <el-table :data="products[(scope.$index)].productAccessories" style="padding-left: 45px" max-height="200px">
+                        <el-table :data="products[(products.indexOf(scope.row))].productAccessories" style="padding-left: 45px" max-height="200px">
                             <el-table-column prop="name" label="Name"></el-table-column>
                             <el-table-column prop="size" label="Size"></el-table-column>
                             <el-table-column prop="materialType.type" label="Material Type"></el-table-column>
                         </el-table>
                     </el-table-column>
+                    <el-table-column prop="productId" label="ID" width="70" sortable></el-table-column>
                     <el-table-column>
                         <template #header>
                             <el-row justify="space-around" align="center">
@@ -32,9 +37,15 @@
                                 </el-col>
                             </el-row>
                         </template>
-                        <el-table-column prop="name" label="Name"></el-table-column>
+                        <el-table-column prop="name" label="Name" sortable></el-table-column>
                         <el-table-column prop="sku" label="SKU"></el-table-column>
                         <el-table-column prop="size" label="Size"></el-table-column>
+                        <el-table-column label="Actions" align="right">
+                            <template #default="scope">
+                                <el-button :icon="Edit" type="primary" circle @click="alert('edit')"></el-button>
+                                <el-button :icon="Delete" type="danger" circle @click.stop="handleDelete(scope.$index, scope.row)"></el-button>
+                            </template>
+                        </el-table-column>
                     </el-table-column>
                 </el-table>
             </el-main>
@@ -46,6 +57,7 @@
 
 <script>
 import axios from "axios";
+import {Delete, Edit} from '@element-plus/icons-vue'
 
 export default {
     name: "Products",
@@ -54,6 +66,8 @@ export default {
         return {
             products: [ ],
             search: '',
+            Delete,
+            Edit
         }
     },
     created() {
@@ -68,6 +82,17 @@ export default {
             }).catch(error => {
                 alert(error)
             })
+        },
+        handleDelete(index, row) {
+            let apiUrl = "/product/" + row.productId
+
+            if(window.confirm("Are you sure you want to delete product " + row.sku + "?")) {
+                axios.delete(apiUrl).then(() => {
+                    this.products.splice(index, 1)
+                }).catch(error => {
+                    alert(error)
+                })
+            }
         }
     }
 
@@ -104,6 +129,10 @@ export default {
         height: 2px;
         color: #FFAE42;
         background-color: #FFAE42;
+    }
+
+    .products-table-main {
+        max-height: 100%;
     }
 
     #products-total-column {
