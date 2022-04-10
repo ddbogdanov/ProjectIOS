@@ -5,7 +5,17 @@ const state = {
 };
 const getters = {
     isAuthenticated: (state) => !!state.user,
+    StateUser: (state) => state.user,
 };
+
+const actions = {
+    async LogIn({commit}, user) {
+        let apiUrl = '/user/login'
+
+        await axios.post(apiUrl, user);
+        await commit("setUser", user.get("username"));
+    },
+}
 
 const mutations = {
     setUser(state, username) {
@@ -19,5 +29,6 @@ const mutations = {
 export default {
     state,
     getters,
+    actions,
     mutations
 }

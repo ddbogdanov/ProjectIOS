@@ -1,29 +1,30 @@
 <template>
-    <router-view v-if="isLoggedIn"/>
-    <Login v-else/>
+    <NavBar class="nav-bar"/>
+    <router-view/>
 </template>
 
 <script>
-import Login from "@/components/Login";
+//import Login from "@/components/Login";
 
+import NavBar from "@/components/NavBar";
 export default {
     name: 'App',
     components: {
-        Login
+        NavBar
     },
     computed : {
-        isLoggedIn : function(){ return this.$store.getters.isAuthenticated}
+        //isLoggedIn : function(){ return this.$store.getters.isAuthenticated}
     },
 }
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    height: 100%
 }
 </style>

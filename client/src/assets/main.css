@@ -1,1 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=family=Roboto:wght@300;400;500&display=swap');
+@import url('http://fonts.cdnfonts.com/css/product-sans');
+
+* {
+    margin: 0;
+    padding: 0;
+}
+html, body {
+    height: 100%;
+}
+.nav-bar * {
+    margin-left: 20px;
+    height: 65px;
+}
+
+.products-view {
+    height: Calc(100% - 65px)
+}

@@ -9,10 +9,7 @@
 import LoginForm from "@/components/forms/LoginForm";
 export default {
   name: 'HelloWorld',
-    components: {LoginForm},
-    props: {
-        msg: String
-  }
+    components: {LoginForm}
 }
 </script>
 

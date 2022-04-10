@@ -18,6 +18,7 @@
 
 <script>
 import axios from "axios"
+//import { mapActions } from "vuex";
 
 export default {
     name: "LoginForm",
@@ -32,10 +33,11 @@ export default {
     },
     methods: {
         onSubmit() {
-            let apiUrl = process.env.VUE_APP_BASE_API_URL + '/user/login'
+            let apiUrl = '/user/login'
 
             axios.post(apiUrl, this.account).then((res) => {
                 console.log(res.data)
+                alert("Successfully logged in")
                 this.$router.push('/home')
             }).catch(error => {
                 alert(error)
