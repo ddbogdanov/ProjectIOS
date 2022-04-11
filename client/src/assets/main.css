@@ -15,3 +15,6 @@ html, body {
 .products-view {
     height: Calc(100% - 65px)
 }
+.material-view {
+    height: Calc(100% - 65px)
+}

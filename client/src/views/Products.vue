@@ -63,7 +63,6 @@
                     </el-table-column>
 
                     <el-table-column>
-
                         <template #header>
                             <el-row justify="space-around">
                                 <el-col :span="2" >
@@ -193,14 +192,6 @@ export default {
 
 }
 
-/*getReport() {
-    axios.get("/report/calculated-material", {responseType: 'blob'}).then((res) => {
-        window.open(URL.createObjectURL(res.data))
-    }).catch(error => {
-        alert(error)
-    })
-}*/
-
 </script>
 
 
@@ -209,7 +200,6 @@ export default {
     .products-view-container {
         height: 100%;
     }
-
     .products-dash-aside {
         width: 415px;
         height: 100%;

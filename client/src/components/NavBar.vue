@@ -23,7 +23,7 @@ export default {
 
     data() {
         return {
-            defaultIndex: this.$route.path
+            defaultIndex: this.$route.path,
         }
     },
     methods: {
