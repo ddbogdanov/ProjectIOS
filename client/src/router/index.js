@@ -3,6 +3,8 @@ import Home from "../views/Home.vue";
 import Login from "@/views/Login";
 import Products from "@/views/Products";
 import Material from "@/views/Material";
+import Orders from "@/views/Orders";
+
 
 const routes = [
     {
@@ -16,6 +18,11 @@ const routes = [
       component: Products
     },
     {
+      path: "/orders",
+      name: "Orders",
+      component: Orders
+    },
+    {
       path: "/material",
       name: "Material",
       component: Material
@@ -25,6 +32,7 @@ const routes = [
         name: "Login",
         component: Login,
     },
+
 ]
 
 const router = createRouter({

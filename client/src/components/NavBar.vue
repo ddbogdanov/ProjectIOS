@@ -13,6 +13,7 @@
         <el-menu-item index="/">Home</el-menu-item>
         <el-menu-item index="/products">Products</el-menu-item>
         <el-menu-item index="/material">Material</el-menu-item>
+        <el-menu-item index="/orders">Orders</el-menu-item>
         <el-menu-item index="/login" style="margin-right: 20px;">Login</el-menu-item>
     </el-menu>
 </template>
