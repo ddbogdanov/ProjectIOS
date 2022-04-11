@@ -19,6 +19,14 @@
             <el-form-item label="Material Type">
                 <el-select v-model="material.materialType"></el-select>
             </el-form-item>
+            <el-row>
+                                <el-col>
+                                    <el-form-item>
+                                        <el-button type="primary" @click="onSubmit()">Submit</el-button>
+                                        <el-button @click="onCancel()">Cancel</el-button>
+                                    </el-form-item>
+                                </el-col>
+                            </el-row>
         </el-form>
     </el-container>
 </template>

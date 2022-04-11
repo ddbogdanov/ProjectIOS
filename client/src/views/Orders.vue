@@ -182,7 +182,7 @@ export default {
             })
         },
         handleCloseDrawer() {
-            ElMessageBox.confirm('Are you sure want to close the product form?')
+            ElMessageBox.confirm('Are you sure want to close the order form?')
                 .then(() => {
                     this.selectedProduct = {name: '', size:'', sku:'', prodMatExpenditure:'', materialType:{materialTypeId: '', type: ''}, productAccessories:[{}] }
                     this.drawer = false
