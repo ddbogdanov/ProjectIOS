@@ -32,7 +32,7 @@ class ReportService(val cms: CalculatedMaterialService, val muas: MaterialUsageA
         val mostAmountMaterial = calculatedMaterials.maxWithOrNull(Comparator.comparingDouble { it.amount }) ?: return null
 
 
-        doc.getElementById("timestamp")?.text("Generated On: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy")))
+        doc.getElementById("timestamp")?.text("Generated On: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mma")))
 
         // Set labels for highest quantity material
         doc.getElementById("most-name")?.text(mostAmountMaterial.name)
@@ -81,7 +81,7 @@ class ReportService(val cms: CalculatedMaterialService, val muas: MaterialUsageA
         pastWeekMaterialAudits = pastWeekMaterialAudits.sortedByDescending { it.datePerformed }
 
 
-        doc.getElementById("timestamp")?.text("Generated On: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy")))
+        doc.getElementById("timestamp")?.text("Generated On: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mma")))
 
         doc.getElementById("mat-deductions")?.text(totalDeductions.toString() + "\"")
         doc.getElementById("mat-additions")?.text(totalAdditions.toString() + "\"")
