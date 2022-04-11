@@ -58,6 +58,7 @@ class SecurityConfig(val authService: AuthenticationService): WebSecurityConfigu
         val corsConfig = CorsConfiguration()
         corsConfig.allowedOrigins = listOf("http://localhost:8080")
         corsConfig.allowedMethods = listOf("GET", "POST", "PUT", "DELETE")
+        corsConfig.allowedHeaders = listOf("content-type")
 
         val source = UrlBasedCorsConfigurationSource()
         source.registerCorsConfiguration("/**", corsConfig)

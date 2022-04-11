@@ -2,10 +2,10 @@
 <div class="login-form">
     <h1>Login</h1>
     <el-form ref="formRef" :model="account" label-position="right">
-        <el-form-item label="Username">
+        <el-form-item label="Username" prop="username">
             <el-input v-model="account.username"></el-input>
         </el-form-item>
-        <el-form-item label="Password">
+        <el-form-item label="Password" prop="password">
             <el-input v-model="account.password" type="password" show-password></el-input>
         </el-form-item>
         <el-form-item>
@@ -45,6 +45,7 @@ export default {
             })
         },
         onCancel() {
+            console.log("CLEARING")
             this.$refs.formRef.resetFields()
         }
     }

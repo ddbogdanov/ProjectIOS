@@ -44,11 +44,6 @@
                                 <el-table-column prop="materialType.type" label="Material Type"></el-table-column>
                                 <el-table-column label="Actions" align="right">
                                     <template #default="scope">
-
-                                        <el-tooltip effect="light" content="Edit" placement="left">
-                                            <el-button :icon="Edit" type="primary" circle @click="handleAccessoryEdit(scope.$index, scope.row)"></el-button>
-                                        </el-tooltip>
-
                                         <el-popconfirm
                                             :title="'Are you sure you want to delete accessory: ' + scope.row.name + '?'"
                                             confirm-button-type="danger"
@@ -70,13 +65,13 @@
                     <el-table-column>
 
                         <template #header>
-                            <el-row justify="space-around" align="center">
+                            <el-row justify="space-around">
                                 <el-col :span="2" >
                                     <el-button :icon="Refresh" circle plain size="small" @click.stop="fetchProducts"></el-button>
                                     <label style="margin-left:10px">Products</label>
                                 </el-col>
                                 <el-col :span="5" style="margin-left:auto;">
-                                    <el-input v-model="search" size="normal" placeholder="Search by name or SKU" :suffix-icon="Search"/>
+                                    <el-input v-model="search" placeholder="Search by name or SKU" :suffix-icon="Search"/>
                                 </el-col>
                             </el-row>
                         </template>
@@ -87,6 +82,7 @@
                         <el-table-column label="Size">
                             <el-table-column prop="size" label="Product Size (in)" sortable></el-table-column>
                             <el-table-column prop="prodMatExpenditure" label="Material to Produce (in)" sortable></el-table-column>
+                            <el-table-column prop="materialType.type" label="Material Type"></el-table-column>
                         </el-table-column>
 
                         <el-table-column label="Actions" align="right">
@@ -113,7 +109,7 @@
                     </el-table-column>
                 </el-table>
             </el-main>
-            <el-drawer v-model="drawer" title="Add Product" direction="ltr">
+            <el-drawer v-model="drawer" title="Add or Edit Product" direction="ltr" :before-close="handleCloseDrawer" destroy-on-close>
                 <ProductForm :productProp='selectedProduct'/>
             </el-drawer>
         </el-container>
@@ -124,10 +120,10 @@
 
 <script>
 import axios from "axios";
+import {ElMessageBox} from "element-plus";
 import {Delete, Edit, Search, Refresh, DocumentAdd} from "@element-plus/icons-vue"
-import {ElMessage, ElMessageBox} from "element-plus";
 import ProductForm from "@/components/forms/ProductForm";
-import {ref} from "vue";
+import {shallowRef} from "vue";
 
 export default {
     name: "Products",
@@ -137,14 +133,15 @@ export default {
             products: [ ],
             search: '',
             loadingTable: false,
-            drawer: ref(false),
-            Delete, Search, Refresh, Edit, DocumentAdd,
-            selectedProduct: { }
+            drawer: shallowRef(false),
+            Delete: shallowRef(Delete), Edit: shallowRef(Edit), Search: shallowRef(Search), Refresh: shallowRef(Refresh), DocumentAdd: shallowRef(DocumentAdd),
+            selectedProduct: {name: '', size:'', sku:'', prodMatExpenditure:'', materialType:{materialTypeId: '', type: ''}, productAccessories:[{}] }
         }
     },
     mounted() {
-        this.$bus.on('cancelProductForm', drawer => {
-            this.drawer = drawer
+        this.$bus.on('closeProductForm', () => {
+            this.drawer = false
+            this.fetchProducts()
         })
     },
     created() {
@@ -175,13 +172,6 @@ export default {
                 ElMessageBox.alert('Product has likely been used in an order and can\'t be deleted. ' + error)
             })
         },
-        handleAccessoryEdit(index, row) {
-            console.log(index, row)
-            ElMessage( {
-                message: "Editing!" + row.name,
-                type: "info"
-            })
-        },
         handleAccessoryDelete(index, row) {
             let apiUrl = "/product-accessories/" + row.productAccessoryId
 
@@ -191,6 +181,14 @@ export default {
                 ElMessageBox.alert('Something went wrong.' + error)
             })
         },
+        handleCloseDrawer() {
+            ElMessageBox.confirm('Are you sure want to close the product form?')
+                .then(() => {
+                    this.selectedProduct = {name: '', size:'', sku:'', prodMatExpenditure:'', materialType:{materialTypeId: '', type: ''}, productAccessories:[{}] }
+                    this.drawer = false
+                    this.fetchProducts()
+                })
+        }
     }
 
 }
@@ -244,7 +242,6 @@ export default {
     .products-subtable {
         margin-left: 48px;
         max-width:Calc(100% - 65px);
-        padding-top: 0 !important;
     }
 
     #main-divider {
