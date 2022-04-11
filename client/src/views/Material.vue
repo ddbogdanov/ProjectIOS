@@ -37,21 +37,31 @@
             <el-main class="material-table-main">
                 <el-tabs id="tabs" v-model="activeTab" :tab-position="'top'" type="card" stretch>
                     <el-tab-pane label="Audit" name="audit">
-
-                        <el-table :data="materialAudit.filter((data) => !search || data.name.toLowerCase().includes(search.toLowerCase()) || data.manufacturer.manufacturer.includes(search))"
-                                  class="material-table" v-loading="loadingTable"
+                        <el-table :data="auditMaterial.filter((data) => !search || data.name.toLowerCase().includes(auditSearch.toLowerCase()) || data.manufacturer.manufacturer.includes(search))"
+                                  class="material-audit-table" v-loading="loadingAuditTable"
                                   stripe height="100%">
 
                             <el-table-column prop="name" label="Name" sortable></el-table-column>
                             <el-table-column prop="manufacturer.manufacturer" label="Manufacturer"></el-table-column>
-                            <el-table-column prop="color" label="Color"></el-table-column>
+                            <el-table-column prop="color.color" label="Color"></el-table-column>
                             <el-table-column prop="materialType.type" label="Material Type"></el-table-column>
                             <el-table-column prop="amount" label="Amount (in)" sortable></el-table-column>
-                            <el-table-column prop="dateInserted" label="Date Inserted" sortable></el-table-column>
+                            <el-table-column prop="dateInserted" label="Date Inserted" sortable :formatter="dateFormatter"></el-table-column>
 
                         </el-table>
                     </el-tab-pane>
-                    <el-tab-pane label="Calculated" name="calc">CALCACALCALCALCLACLACLALCALCALCLACLALCALCALC</el-tab-pane>
+                    <el-tab-pane label="Calculated" name="calc">
+                        <el-table :data="calcMaterial.filter((data) => !search || data.name.toLowerCase().includes(calcSearch.toLowerCase()) || data.manufacturer.manufacturer.includes(search))"
+                                  class="material-audit-table" v-loading="loadingCalcTable"
+                                  stripe height="100%">
+
+                            <el-table-column prop="name" label="Name" sortable></el-table-column>
+                            <el-table-column prop="manufacturer.manufacturer" label="Manufacturer"></el-table-column>
+                            <el-table-column prop="color.color" label="Color"></el-table-column>
+                            <el-table-column prop="materialType.type" label="Material Type"></el-table-column>
+                            <el-table-column prop="amount" label="Total Amount" sortable></el-table-column>
+                        </el-table>
+                    </el-tab-pane>
                 </el-tabs>
             </el-main>
             <el-drawer v-model="drawer" title="Add or Edit Material" direction="ltr" :before-close="handleCloseDrawer" destroy-on-close>
@@ -62,25 +72,54 @@
 </template>
 
 <script>
+import moment from "moment";
 import {DocumentAdd, Document, ArrowDown} from "@element-plus/icons-vue"
 import {shallowRef} from "vue";
 import axios from "axios";
+import {ElMessageBox} from "element-plus";
 
 export default {
     name: "Material",
 
     data() {
         return {
-            materialAudit: [],
-            materialCalc: [],
-            search: '',
+            auditMaterial: [],
+            calcMaterial: [],
+            auditSearch: '',
+            calcSearch: '',
             drawer: false,
-            loadingTable: false,
+            loadingAuditTable: false, loadingCalcTable: false,
             activeTab: 'audit',
-            DocumentAdd: shallowRef(DocumentAdd), Document: shallowRef(Document), ArrowDown: shallowRef(ArrowDown)
+            DocumentAdd: shallowRef(DocumentAdd), Document: shallowRef(Document), ArrowDown: shallowRef(ArrowDown),
         }
     },
+    created() {
+        this.fetchAuditMaterial()
+        this.fetchCalcMaterial()
+    },
     methods: {
+        fetchAuditMaterial() {
+            this.loadingAuditTable = true
+            let apiUrl = '/production-material'
+
+            axios.get(apiUrl).then((res) => {
+                this.auditMaterial = res.data
+                this.loadingAuditTable = false
+            }).catch((error) => {
+                ElMessageBox.alert("Something went wrong: " + error)
+            })
+        },
+        fetchCalcMaterial() {
+            this.loadingCalcTable = true
+            let apiUrl = '/production-material/calculated'
+
+            axios.get(apiUrl).then((res) => {
+                this.calcMaterial = res.data
+                this.loadingCalcTable = false
+            }).catch((error) => {
+                ElMessageBox.alert("Something went wrong: " + error)
+            })
+        },
         handleCloseDrawer() {
             this.drawer = false
         },
@@ -89,8 +128,8 @@ export default {
 
             axios.get(apiUrl, {responseType: 'blob'}).then((res) => {
                 window.open(URL.createObjectURL(res.data))
-            }).catch(error => {
-                alert(error)
+            }).catch((error) => {
+                ElMessageBox.alert("Something went wrong" + error)
             })
         },
         generateUsageReport() {
@@ -101,6 +140,10 @@ export default {
             }).catch(error => {
                 alert(error)
             })
+        },
+
+        dateFormatter(row) {
+            return moment(row).format('MM-DD-YYYY')
         }
     }
 }
@@ -135,7 +178,11 @@ export default {
 .material-table-main {
     max-height: 100%;
 }
-.material-table {
+.material-audit-table {
+    height: 100%;
+    width: 100%;
+}
+.material-calc-table {
     height: 100%;
     width: 100%;
 }

@@ -154,8 +154,8 @@ export default {
             axios.get(apiUrl).then((res) => {
                 this.products = res.data
                 this.loadingTable = false
-            }).catch(error => {
-                alert(error)
+            }).catch((error) => {
+                ElMessageBox.alert("Something went wrong: " + error)
             })
         },
         handleProductEdit(index, row) {
