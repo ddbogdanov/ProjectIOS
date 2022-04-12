@@ -29,16 +29,27 @@
                 </el-container>
             </el-aside>
             <el-main class="orders-table-main">
-              <el-table :data="orders.filter((data) => !search || data.name.toLowerCase().includes(search.toLowerCase()) || data.sku.includes(search))"
+              <el-table :data="orders.filter((data) => !search || data.productOrderId.includes(search))"
                         class="orders-table" v-loading="loadingTable"
                         stripe height="100%" >
+                <el-table-column>
+                <template #header>
+                  <el-row justify="space-around">
+                    <el-col :span="2" >
+                      <el-button :icon="Refresh" circle plain size="small" @click.stop="fetchOrders"></el-button>
+                    </el-col>
+                    <el-col :span="5" style="margin-left:auto;">
+                      <el-input v-model="search" placeholder="Search by Order ID" :suffix-icon="Search"/>
+                    </el-col>
+                  </el-row>
+                </template>
 
                 <el-table-column prop="product.name" label="Name" sortable min-width="199"></el-table-column>
                 <el-table-column prop="productOrderId" label="ID" align="right"></el-table-column>
                 <el-table-column prop="product.sku" label="SKU" align="right"></el-table-column>
                 <el-table-column prop="color.color" label="Color" align="right"></el-table-column>
                 <el-table-column prop="product.materialType.type" label="Material Type" align="right"></el-table-column>
-                <el-table-column prop="quantity" label="quantity" sortable align="right"></el-table-column>
+                <el-table-column prop="quantity" label="Quantity" sortable align="right"></el-table-column>
                 <el-table-column prop="dateCreated" label="Date Created" sortable :formatter="dateFormatter" align="right"></el-table-column>
                 <el-table-column label="Actions" align="right" width="130">
                   <template #default="scope">
@@ -46,7 +57,6 @@
                     <el-tooltip effect="light" content="Edit" placement="left">
                       <el-button :icon="Edit" type="primary" circle @click="handleOrderEdit(scope.$index, scope.row)"></el-button>
                     </el-tooltip>
-
                     <el-popconfirm
                         :title="'Are you sure you want to delete order: ' + scope.row.productOrderId + '?'"
                         confirm-button-type="danger"
@@ -61,11 +71,11 @@
                     </el-popconfirm>
                   </template>
                 </el-table-column>
-
+                </el-table-column>
               </el-table>
             </el-main>
             <el-drawer v-model="drawer" title="Create New Order" direction="ltr" :before-close="handleCloseDrawer" destroy-on-close>
-                <OrderForm :productProp='selectedProduct'/>
+                <OrderForm :productProp='selectedOrder'/>
             </el-drawer>
         </el-container>
     </section>
@@ -91,8 +101,9 @@ export default {
             loadingTable: false,
             drawer: shallowRef(false),
             Delete: shallowRef(Delete), Edit: shallowRef(Edit), Search: shallowRef(Search), Refresh: shallowRef(Refresh), DocumentAdd: shallowRef(DocumentAdd),
+          selectedOrder: {productOrderId: '', quantity: '', dateCreated: '', color: {colorId: '', color: ''}, product: {productId:'', name: '', sku:''}, materialType: {materialTypeId: '', type: ''}},
 
-        }
+          }
     },
     mounted() {
         this.$bus.on('closeOrderForm', () => {
@@ -131,7 +142,7 @@ export default {
         handleCloseDrawer() {
             ElMessageBox.confirm('Are you sure want to close the order form?')
                 .then(() => {
-                    this.selectedOrder = {name: '', size:'', sku:'', color:'', prodMatExpenditure:'', materialType:{materialTypeId: '', type: ''} }
+                    this.selectedOrder = {name: '', product:{ sku:''}, sku:'', color:'', prodMatExpenditure:'', materialType:{materialTypeId: '', type: ''} }
                     this.drawer = false
                     this.fetchOrders()
                 })

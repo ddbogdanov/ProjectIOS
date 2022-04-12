@@ -18,14 +18,14 @@ const routes = [
       component: Products
     },
     {
-      path: "/orders",
-      name: "Orders",
-      component: Orders
-    },
-    {
       path: "/material",
       name: "Material",
       component: Material
+    },
+    {
+        path: "/orders",
+        name: "Orders",
+        component: Orders
     },
     {
         path:"/login",
