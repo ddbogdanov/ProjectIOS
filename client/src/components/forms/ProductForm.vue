@@ -17,7 +17,7 @@
                 <el-row>
                     <el-col>
                         <el-form-item label="SKU" prop="sku">
-                            <el-input v-model="product.sku"></el-input>
+                            <el-input v-model="product.sku"><template #prepend>#</template></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -181,7 +181,7 @@ export default {
         }
     },
     mounted() {
-        this.$bus.on('clearProductForm', () => {
+        this.$bus.on('clearProductForm', () => { //UNUSED??
             this.onCancel()
         })
         if(this.productProp !== { }) {
@@ -197,6 +197,7 @@ export default {
                 if(!valid) return false
                 else {
                     let apiUrl = "/product"
+                    this.product.sku = '#' + this.product.sku
 
                     axios.post(apiUrl, this.product).then((res) => {
                         console.log(res)
