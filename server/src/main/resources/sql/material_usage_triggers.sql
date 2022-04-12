@@ -15,3 +15,13 @@ BEGIN
     END IF;
 
 END;
+
+CREATE OR REPLACE TRIGGER add_log_material_use
+    AFTER INSERT ON iosdb.production_material_calculated
+    FOR EACH ROW
+
+BEGIN
+
+    INSERT INTO material_usage_audit VALUES(null, new.amount_calculated, new.color_id, new.manufacturer_id, new.material_type_id, now());
+
+END;

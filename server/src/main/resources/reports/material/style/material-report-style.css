@@ -94,3 +94,11 @@ table, td, th {
     vertical-align: top;
     height: 50%;
 }
+
+.footer {
+    display: table-footer-group
+}
+.footer:after {
+    counter-increment: page;
+    content: counter(page);
+}
