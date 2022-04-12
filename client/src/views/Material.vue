@@ -40,7 +40,7 @@
                 <el-tabs id="tabs" v-model="activeTab" :tab-position="'top'" type="border-card" stretch style="display:flex; flex-direction: column; flex-grow: 1; height: 100%;">
                     <el-tab-pane label="Audit" name="audit" style="height: 100%; flex-grow: 1;">
                         <div style="height: 100vh;"> <!-- HACKY SOLUTION OOPS -->
-                        <el-table :data="auditMaterial.filter((data) => !search || data.name.toLowerCase().includes(auditSearch.toLowerCase()) || data.manufacturer.manufacturer.includes(search))"
+                        <el-table :data="auditMaterial.filter((data) => !search || data.name.toLowerCase().includes(search.toLowerCase()) || data.manufacturer.manufacturer.includes(search))"
                                   class="material-audit-table" v-loading="loadingAuditTable"
                                   stripe height="100%">
 
@@ -51,7 +51,7 @@
                                             <el-button :icon="Refresh" circle plain size="small" @click.stop="fetchAuditMaterial"></el-button>
                                         </el-col>
                                         <el-col :span="5" style="margin-left:auto;">
-                                            <el-input v-model="auditSearch" placeholder="Search by name or manufacturer" :suffix-icon="Search"/>
+                                            <el-input v-model="search" placeholder="Search by name or manufacturer" :suffix-icon="Search"/>
                                         </el-col>
                                     </el-row>
                                  </template>
@@ -89,7 +89,7 @@
                     </el-tab-pane>
                     <el-tab-pane label="Calculated" name="calc">
                         <div style="height: 100vh;">
-                        <el-table :data="calcMaterial.filter((data) => !search || data.name.toLowerCase().includes(calcSearch.toLowerCase()) || data.manufacturer.manufacturer.includes(search))"
+                        <el-table :data="calcMaterial.filter((data) => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
                                   class="material-calc-table" v-loading="loadingCalcTable"
                                   stripe height="100%">
 
@@ -100,7 +100,7 @@
                                             <el-button :icon="Refresh" circle plain size="small" @click.stop="fetchCalcMaterial"></el-button>
                                         </el-col>
                                         <el-col :span="5" style="margin-left:auto;">
-                                            <el-input v-model="calcSearch" placeholder="Search by name or manufacturer" :suffix-icon="Search"/>
+                                            <el-input v-model="search" placeholder="Search by name or manufacturer" :suffix-icon="Search"/>
                                         </el-col>
                                     </el-row>
                                 </template>
@@ -138,8 +138,8 @@ export default {
 
     data() {
         return {
-            auditMaterial: [], calcMaterial: [],
-            auditSearch: '', calcSearch: '',
+            auditMaterial: [ ], calcMaterial: [ ],
+            search: '',
             drawer: false,
             activeTab: 'audit',
             loadingAuditTable: false, loadingCalcTable: false,
