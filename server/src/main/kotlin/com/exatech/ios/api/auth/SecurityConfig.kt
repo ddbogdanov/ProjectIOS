@@ -37,8 +37,6 @@ class SecurityConfig(val authService: AuthenticationService): WebSecurityConfigu
 
     override fun configure(http: HttpSecurity)  {
         http
-            .authorizeRequests().antMatchers("/color").hasAnyRole("admin")
-            .and()
             .httpBasic()
             .and()
             .cors()
