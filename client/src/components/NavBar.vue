@@ -1,6 +1,6 @@
 <template>
     <el-menu
-        :default-active="defaultIndex"
+        :default-active="currentRoute"
         class="nav-bar"
         mode="horizontal"
         @select="handleSelect"
@@ -24,7 +24,12 @@ export default {
 
     data() {
         return {
-            defaultIndex: this.$route.path,
+
+        }
+    },
+    computed: {
+        currentRoute() {
+            return this.$route.path
         }
     },
     methods: {

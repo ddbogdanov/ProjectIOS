@@ -55,7 +55,7 @@
                                     </el-row>
                                  </template>
 
-                                <el-table-column prop="name" label="Name" sortable min-width="100"></el-table-column>
+                                <el-table-column prop="name" label="Name" sortable min-width="200"></el-table-column>
                                 <el-table-column prop="manufacturer.manufacturer" label="Manufacturer" align="right"></el-table-column>
                                 <el-table-column prop="color.color" label="Color" align="right"></el-table-column>
                                 <el-table-column prop="materialType.type" label="Material Type" align="right"></el-table-column>
@@ -102,11 +102,11 @@
                                     </el-row>
                                 </template>
 
-                                <el-table-column prop="name" label="Name" sortable></el-table-column>
-                                <el-table-column prop="manufacturer.manufacturer" label="Manufacturer"></el-table-column>
-                                <el-table-column prop="color.color" label="Color"></el-table-column>
-                                <el-table-column prop="materialType.type" label="Material Type"></el-table-column>
-                                <el-table-column prop="amount" label="Total Amount" sortable></el-table-column>
+                                <el-table-column prop="name" label="Name" min-width="200" sortable></el-table-column>
+                                <el-table-column prop="manufacturer.manufacturer" label="Manufacturer" align="right"></el-table-column>
+                                <el-table-column prop="color.color" label="Color" align="right"></el-table-column>
+                                <el-table-column prop="materialType.type" label="Material Type" align="right"></el-table-column>
+                                <el-table-column prop="amount" label="Total Amount" align="right" sortable></el-table-column>
                             </el-table-column>
                         </el-table>
                     </el-tab-pane>
