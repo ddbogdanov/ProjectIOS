@@ -91,14 +91,20 @@ class ReportService(val cms: CalculatedMaterialService, val muas: MaterialUsageA
                 + " - "
                 + LocalDate.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy")))
 
+        var deltaString: String
         for(m: MaterialUsageAudit in pastWeekMaterialAudits) {
+            deltaString = if(m.deltaAmount > 0) {
+                "<td>+" + m.deltaAmount + "</td>"
+            } else {
+                "<td>" + m.deltaAmount + "</td>"
+            }
             doc.getElementById("table-body")?.append(
                 "<tr>" +
                         "<td>" + m.color.color + "</td>" +
                         "<td>" + m.materialType.type + "</td>" +
                         "<td>" + m.manufacturer.manufacturer + "</td>" +
                         "<td>" + m.datePerformed.format(DateTimeFormatter.ofPattern("MM-dd-yyy")) + "</td>" +
-                        "<td>" + m.deltaAmount + "</td>" +
+                        deltaString +
                         "</tr>")
         }
 
