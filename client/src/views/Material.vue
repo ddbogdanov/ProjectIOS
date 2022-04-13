@@ -37,12 +37,11 @@
             </el-aside>
 
             <el-main class="material-table-main">
-                <el-tabs id="tabs" v-model="activeTab" :tab-position="'top'" type="border-card" stretch style="display:flex; flex-direction: column; flex-grow: 1; height: 100%;">
+                <el-tabs id="tabs" v-model="activeTab" :tab-position="'top'" type="border-card" stretch style="display:flex; flex-direction: column; height: 100%;">
                     <el-tab-pane label="Audit" name="audit" style="height: 100%; flex-grow: 1;">
-                        <div style="height: 100vh;"> <!-- HACKY SOLUTION OOPS -->
                         <el-table :data="auditMaterial.filter((data) => !search || data.name.toLowerCase().includes(search.toLowerCase()) || data.manufacturer.manufacturer.includes(search))"
                                   class="material-audit-table" v-loading="loadingAuditTable"
-                                  stripe height="100%">
+                                  stripe style="max-height: 100%; overflow: scroll; overflow-y: auto; overflow-x: auto;">
 
                             <el-table-column>
                                 <template #header>
@@ -85,13 +84,11 @@
                                 </el-table-column>
                             </el-table-column>
                         </el-table>
-                        </div>
                     </el-tab-pane>
-                    <el-tab-pane label="Calculated" name="calc">
-                        <div style="height: 100vh;">
+                    <el-tab-pane label="Calculated" name="calc" style="height: 100%; flex-grow: 1;">
                         <el-table :data="calcMaterial.filter((data) => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
                                   class="material-calc-table" v-loading="loadingCalcTable"
-                                  stripe height="100%">
+                                  stripe style="max-height: 100%; overflow: scroll; overflow-y: auto; overflow-x: auto;">
 
                             <el-table-column>
                                 <template #header>
@@ -112,7 +109,6 @@
                                 <el-table-column prop="amount" label="Total Amount" sortable></el-table-column>
                             </el-table-column>
                         </el-table>
-                        </div>
                     </el-tab-pane>
                 </el-tabs>
             </el-main>

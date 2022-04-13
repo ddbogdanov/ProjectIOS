@@ -13,6 +13,7 @@ class MaterialTypeService(val db: MaterialTypeRepo, val ps: ProductService) {
     fun findById(materialTypeId: Int): Optional<MaterialType> = db.findById(materialTypeId)
 
     fun save(materialType: MaterialType): MaterialType {
+        //TODO Check for duplicates by name
         return db.save(materialType)
     }
 
