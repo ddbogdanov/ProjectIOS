@@ -4,6 +4,7 @@ import com.exatech.ios.api.color.Color
 import com.exatech.ios.api.productaccessory.ProductAccessory
 import com.exatech.ios.api.productionmaterial.calculated.CalculatedMaterial
 import com.exatech.ios.api.productorder.ProductOrder
+import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import org.hibernate.Hibernate
 import org.hibernate.annotations.CreationTimestamp
@@ -26,6 +27,7 @@ data class AccessoryOrder
     @ManyToOne(fetch=FetchType.LAZY, cascade=[CascadeType.REFRESH])
     @JoinColumn(name="product_order_id", nullable=false)
     @JsonIgnoreProperties("product", "color", "quantity", "completed", "dateCreated", "dateCompleted")
+    @JsonBackReference
     var productOrder: ProductOrder,
 
     @ManyToOne(fetch=FetchType.LAZY, cascade=[CascadeType.REFRESH])

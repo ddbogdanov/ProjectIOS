@@ -2,8 +2,11 @@ package com.exatech.ios.api.productorder
 
 import com.exatech.ios.api.color.Color
 import com.exatech.ios.api.product.Product
+import com.exatech.ios.api.productaccessory.ProductAccessory
+import com.exatech.ios.api.productaccessoryorder.AccessoryOrder
 import com.exatech.ios.api.productionmaterial.calculated.CalculatedMaterial
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import org.hibernate.Hibernate
 import org.hibernate.annotations.CreationTimestamp
 import java.time.LocalDateTime
@@ -17,6 +20,11 @@ data class ProductOrder
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="product_order_id")
     val productOrderId: Int,
+
+
+    @OneToMany(cascade=[CascadeType.ALL], fetch=FetchType.LAZY, mappedBy="productOrder")
+    @JsonManagedReference
+    val accessoryOrders: List<AccessoryOrder>,
 
     @ManyToOne(fetch=FetchType.LAZY, cascade=[CascadeType.REFRESH])
     @JoinColumn(name="product_id", nullable=false)
