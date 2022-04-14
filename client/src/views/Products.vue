@@ -1,7 +1,7 @@
 <template>
     <section class="products-view">
         <el-container class="products-view-container">
-            <el-aside class="products-dash-aside">
+            <el-aside class="hidden-md-and-down products-dash-aside">
                 <el-container class="products-dash-container">
                     <el-header class="products-dash-header">
                         <h1 id="products-aside-label">PRODUCTS</h1>
@@ -64,13 +64,13 @@
 
                     <el-table-column>
                         <template #header>
-                            <el-row justify="space-around">
-                                <el-col :span="2" >
+                            <el-row justify="space-between">
+                                <el-col :span="16">
                                     <el-button :icon="Refresh" circle plain size="small" @click.stop="fetchProducts"></el-button>
                                     <label style="margin-left:10px">Products</label>
                                 </el-col>
-                                <el-col :span="5" style="margin-left:auto;">
-                                    <el-input v-model="search" placeholder="Search by name or SKU" :suffix-icon="Search"/>
+                                <el-col :span="8">
+                                    <el-input v-model="search" placeholder="Search by name or SKU" :suffix-icon="Search" style="float: right; width: 250px"/>
                                 </el-col>
                             </el-row>
                         </template>

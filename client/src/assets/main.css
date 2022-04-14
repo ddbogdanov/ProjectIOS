@@ -7,17 +7,17 @@
 html, body {
     height: 100%;
 }
-.nav-bar * {
-    margin-left: 20px;
+.nav-bar {
+    margin-left: 0;
     height: 65px;
 }
 
 .products-view {
-    height: Calc(100% - 65px)
+    height: Calc(100% - 66px)
 }
 .material-view {
-    height: Calc(100% - 65px)
+    height: Calc(100% - 66px)
 }
 .orders-view {
-    height: Calc(100% - 65px)
+    height: Calc(100% - 66px)
 }

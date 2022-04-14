@@ -41,7 +41,7 @@
                     <el-tab-pane label="Audit" name="audit" style="height: 100%; flex-grow: 1;">
                         <el-table :data="auditMaterial.filter((data) => !search || data.name.toLowerCase().includes(search.toLowerCase()) || data.manufacturer.manufacturer.includes(search))"
                                   class="material-audit-table" v-loading="loadingAuditTable"
-                                  stripe height="100vh" style="max-height: 100%; overflow: scroll; overflow-y: auto; overflow-x: auto;">
+                                  stripe height="100vh" style="max-height: 100%;">
 
                             <el-table-column>
                                 <template #header>
@@ -88,7 +88,7 @@
                     <el-tab-pane label="Calculated" name="calc" style="height: 100%; flex-grow: 1;">
                         <el-table :data="calcMaterial.filter((data) => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
                                   class="material-calc-table" v-loading="loadingCalcTable"
-                                  stripe height="100vh" style="max-height: 100%; overflow: scroll; overflow-y: auto; overflow-x: auto;">
+                                  stripe height="100vh" style="max-height: 100%;">
 
                             <el-table-column>
                                 <template #header>

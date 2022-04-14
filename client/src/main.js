@@ -7,6 +7,8 @@ import 'element-plus/dist/index.css'
 import store from "./store"
 import axios from "axios"
 import $bus from './event.js'
+import 'element-plus/theme-chalk/display.css'
+
 //import {Delete, Edit, Search, Refresh, DocumentAdd} from "@element-plus/icons-vue"
 axios.defaults.baseURL = "http://localhost:3000/innovativestencils/api/v1";
 
