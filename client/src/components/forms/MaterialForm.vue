@@ -132,7 +132,8 @@ export default {
                         trigger: 'blur'
                     }
                 ],
-            }, manufacturerFormRules: {
+            },
+            manufacturerFormRules: {
                 manufacturer: [
                     {
                         required: true,
@@ -140,7 +141,8 @@ export default {
                         trigger: 'blur'
                     }
                 ],
-            }, colorFormRules: {
+            },
+            colorFormRules: {
                 color: [
                     {
                         required: true,

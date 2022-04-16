@@ -11,82 +11,158 @@
 
                     <el-row id="orders-actions-row">
                         <el-col>
-                            <h1 style="font-size: 1.5em;">Actions</h1>
-                            <el-button-group style="margin-top: 10px;">
-                                <el-button type="success" plain round :icon="DocumentAdd" @click="drawer=true">Create New Order</el-button>
-                            </el-button-group>
                         </el-col>
                     </el-row>
 
                     <el-divider id="secondary-divider"/>
-
                     <el-row id="orders-total-row">
                         <el-col>
                             <h1 id="orders-total-label">Total Orders:</h1>
-                            <label id="orders-count-label">{{orders.length}}</label>
+                            <label id="orders-count-label">{{productOrders.length}}</label>
                         </el-col>
                     </el-row>
                 </el-container>
             </el-aside>
+
+
             <el-main class="orders-table-main">
-              <el-table :data="orders.filter((data) => !search || data.productOrderId.includes(search))"
-                        class="orders-table" v-loading="loadingTable"
-                        stripe height="100%" >
+                <el-table :data="productOrders.filter((data) => !search || data.productOrderId.includes(search))"
+                          :default-sort="{prop: 'completed', order: 'ascending'}"
+                          class="orders-table" v-loading="loadingTable"
+                          height="100%" :row-class-name="tableRowClassName">
+
                 <el-table-column>
                 <template #header>
-                  <el-row justify="space-around">
-                    <el-col :span="2" >
-                      <el-button :icon="Refresh" circle plain size="small" @click.stop="fetchOrders"></el-button>
-                    </el-col>
-                    <el-col :span="5" style="margin-left:auto;">
-                      <el-input v-model="search" placeholder="Search by Order ID" :suffix-icon="Search"/>
-                    </el-col>
-                  </el-row>
+                    <el-row justify="space-around" style="align-items: center">
+                        <el-col :span="5" >
+                            <el-button :icon="Refresh" circle plain size="small" @click.stop="fetchProductOrders"></el-button>
+                            <label style="margin-left:10px; font-family: 'Product Sans', sans-serif">Product Orders</label>
+                        </el-col>
+                        <el-col :span="5" style="margin-left:auto;">
+                                <el-input v-model="search" placeholder="Search by Order ID" :suffix-icon="Search"/>
+                        </el-col>
+                    </el-row>
                 </template>
 
-                <el-table-column prop="product.name" label="Name" sortable min-width="199"></el-table-column>
-                <el-table-column prop="productOrderId" label="ID" align="right"></el-table-column>
-                <el-table-column prop="product.sku" label="SKU" align="right"></el-table-column>
-                <el-table-column prop="color.color" label="Color" align="right"></el-table-column>
-                <el-table-column prop="product.materialType.type" label="Material Type" align="right"></el-table-column>
-                <el-table-column prop="quantity" label="Quantity" sortable align="right"></el-table-column>
-                <el-table-column prop="dateCreated" label="Date Created" sortable :formatter="dateFormatter" align="right"></el-table-column>
-                <el-table-column label="Actions" align="right" width="130">
-                  <template #default="scope">
-
-                    <el-tooltip effect="light" content="Edit" placement="left">
-                      <el-button :icon="Edit" type="primary" circle @click="handleOrderEdit(scope.$index, scope.row)"></el-button>
-                    </el-tooltip>
-                    <el-popconfirm
-                        :title="'Are you sure you want to delete order: ' + scope.row.productOrderId + '?'"
-                        confirm-button-type="danger"
-                        cancel-button-type="info"
-                        cancel-button-text="No, Dont Delete"
-                        icon-color="red"
-                        @confirm.stop="handleOrderDelete(scope.$index, scope.row)"
+                <el-table-column type="expand" #default="scope">
+                    <el-table :data="productOrders[(productOrders.indexOf(scope.row))].accessoryOrders"
+                              :default-sort="{prop: 'completed', order: 'ascending'}"
+                              class="orders-subtable" :row-class-name="tableRowClassName"
                     >
-                      <template #reference>
-                        <el-button :icon="Delete" type="danger" circle></el-button>
-                      </template>
-                    </el-popconfirm>
-                  </template>
+                        <el-table-column :label="'Accessory Orders - ID: #' + productOrders[(productOrders.indexOf(scope.row))].productOrderId">
+                            <el-table-column label="Accessory Info">
+                                <el-table-column prop="productAccessory.name" label="Name"></el-table-column>
+                                <el-table-column prop="productAccessory.materialType.type" label="Quantity"></el-table-column>
+                            </el-table-column>
+                            <el-table-column label="Order Info">
+                                <el-table-column prop="quantity" label="Quantity"></el-table-column>
+                                <el-table-column prop="color.color" label="Color"></el-table-column>
+                                <el-table-column prop="dateCreated" label="Date Entered" :formatter="dateFormatter"></el-table-column>
+                                <el-table-column prop="completed" label="Done?" :formatter="booleanFormatter"></el-table-column>
+                            </el-table-column>
+
+                            <el-table-column label="Actions" align="right" width="160">
+                                <template #default="scope">
+                                    <el-button :icon="Check" type="success" circle v-if="!scope.row.completed" @click.stop="handleBeginOrderComplete(scope.$index, scope.row)"></el-button>
+
+                                    <el-popconfirm
+                                        :title="'Are you sure you want to delete accessory order ID: ' + scope.row.accessoryOrderId + '?'"
+                                        confirm-button-type="danger"
+                                        cancel-button-type="info"
+                                        cancel-button-text="No, Dont Delete"
+                                        icon-color="red"
+                                        @confirm.stop="handleAccOrderDelete(scope.$index, scope.row)"
+                                    >
+                                        <template #reference>
+                                            <el-button :icon="Delete" type="danger" circle></el-button>
+                                        </template>
+                                    </el-popconfirm>
+                                </template>
+                            </el-table-column>
+                        </el-table-column>
+                    </el-table>
+                    <el-card class="orders-subtable" style="margin-top: 10px" shadow="hover" v-if="scope.row.comments !== ''">
+                        <template #header>
+                            <span style="font-family: 'Product Sans', sans-serif;"><h3>Order Comments</h3></span>
+                        </template>
+                        <p>{{scope.row.comments}}</p>
+                    </el-card>
+                </el-table-column>
+
+
+                <el-table-column prop="productOrderId" label="ID" width="50"></el-table-column>
+                <el-table-column label="Product Info">
+                    <el-table-column prop="product.name" label="Product Name" sortable min-width="150"></el-table-column>
+                    <el-table-column prop="product.sku" label="Product SKU" align="right"></el-table-column>
+                </el-table-column>
+                <el-table-column label="Order Info">
+                    <el-table-column prop="color.color" label="Color" align="right"></el-table-column>
+                    <el-table-column prop="quantity" label="Quantity" sortable align="right"></el-table-column>
+                    <el-table-column prop="product.materialType.type" label="Material Type" align="right"></el-table-column>
+                    <el-table-column prop="dateCreated" label="Date Created" sortable :formatter="dateFormatter" align="right"></el-table-column>
+                    <el-table-column prop="completed" label="Done?" sortable align="right" width="100" :formatter="booleanFormatter"></el-table-column>
+                </el-table-column>
+
+                <el-table-column label="Actions" align="right" width="160">
+                    <template #default="scope">
+
+                        <el-button :icon="Check" type="success" circle v-if="!scope.row.completed" @click.stop="handleBeginOrderComplete(scope.$index, scope.row)"></el-button>
+
+                        <el-tooltip effect="light" content="Edit" placement="top-start">
+                            <el-button :icon="Edit" type="primary" circle @click="handleOrderEdit(scope.$index, scope.row)"></el-button>
+                        </el-tooltip>
+                        <el-popconfirm
+                            :title="'Are you sure you want to delete order ID: ' + scope.row.productOrderId + '?'"
+                            confirm-button-type="danger"
+                            cancel-button-type="info"
+                            cancel-button-text="No, Dont Delete"
+                            icon-color="red"
+                            @confirm.stop="handleOrderDelete(scope.$index, scope.row)"
+                        >
+                            <template #reference>
+                                <el-button :icon="Delete" type="danger" circle></el-button>
+                            </template>
+                        </el-popconfirm>
+                    </template>
                 </el-table-column>
                 </el-table-column>
-              </el-table>
+                </el-table>
             </el-main>
             <el-drawer v-model="drawer" title="Create New Order" direction="ltr" :before-close="handleCloseDrawer" destroy-on-close>
-                <OrderForm :productProp='selectedOrder'/>
+                <OrderForm :productProp="{}" :orderProp='selectedOrder'/>
             </el-drawer>
+
+            <el-dialog v-model="materialSelectDialogVisible" title="Select the material you used">
+                <el-table :data="applicableMaterials" highlight-current-row ref="appMaterialRef" @current-change="handleCurrentChange">
+                    <el-table-column prop="name" label="Name" min-width="200" sortable></el-table-column>
+                    <el-table-column prop="manufacturer.manufacturer" label="Manufacturer" align="right"></el-table-column>
+                    <el-table-column prop="color.color" label="Color" align="right"></el-table-column>
+                </el-table>
+
+                <template #footer>
+                    <el-button plain @click="handleCloseCompleteDialog">Cancel</el-button>
+                    <el-popconfirm
+                        :title="'Are you sure you want to set this order as completed? This will not complete accessory orders, and this action CANNOT be undone'"
+                        confirm-button-type="success"
+                        cancel-button-type="info"
+                        cancel-button-text="No, It's Not Complete"
+                        icon-color="green"
+                        @confirm.stop="handleOrderComplete()"
+                    >
+                        <template #reference>
+                            <el-button type="success">Confirm</el-button>
+                        </template>
+                    </el-popconfirm>
+                </template>
+            </el-dialog>
         </el-container>
     </section>
 </template>
 
-
-
 <script>
 import axios from "axios";
 import {ElMessageBox} from "element-plus";
-import {Delete, Edit, Search, Refresh, DocumentAdd} from "@element-plus/icons-vue"
+import {Delete, Edit, Search, Refresh, DocumentAdd, Check,} from "@element-plus/icons-vue"
 import OrderForm from "@/components/forms/OrderForm";
 import {shallowRef} from "vue";
 import moment from "moment";
@@ -96,34 +172,46 @@ export default {
     components: { OrderForm },
     data() {
         return {
-            orders: [ ],
+            productOrders: [],
             search: '',
             loadingTable: false,
             drawer: shallowRef(false),
-            Delete: shallowRef(Delete), Edit: shallowRef(Edit), Search: shallowRef(Search), Refresh: shallowRef(Refresh), DocumentAdd: shallowRef(DocumentAdd),
-          selectedOrder: {productOrderId: '', quantity: '', dateCreated: '', color: {colorId: '', color: ''}, product: {productId:'', name: '', sku:''}, materialType: {materialTypeId: '', type: ''}},
-
+            Delete: shallowRef(Delete), Edit: shallowRef(Edit), Search: shallowRef(Search), Refresh: shallowRef(Refresh), DocumentAdd: shallowRef(DocumentAdd), Check: shallowRef(Check),
+            selectedOrder: {productOrderId: '', quantity: '', dateCreated: '', color: {colorId: '', color: ''}, product: {productId:'', name: '', sku:''}, materialType: {materialTypeId: '', type: ''}},
+            materialSelectDialogVisible: false, applicableMaterials: [], orderToComplete: {}, selectedMaterial: {}
           }
     },
     mounted() {
         this.$bus.on('closeOrderForm', () => {
             this.drawer = false
-            this.fetchOrders()
+            this.fetchProductOrders()
         })
     },
     created() {
-        this.fetchOrders()
+        this.fetchProductOrders()
     },
     methods: {
-      fetchOrders() {
+        fetchProductOrders() {
             this.loadingTable = true
             let apiUrl = "/product/order"
 
             axios.get(apiUrl).then((res) => {
-                this.orders = res.data
+                this.productOrders = res.data
                 this.loadingTable = false
             }).catch((error) => {
                 ElMessageBox.alert("Something went wrong: " + error)
+            })
+        },
+        fetchApplicableMaterials(matTypeId, colorId) {
+            let apiUrl = "/production-material/calculated/"
+                + matTypeId
+                + "/"
+                + colorId
+
+            axios.get(apiUrl).then((res) => {
+                this.applicableMaterials = res.data
+            }).catch((error) => {
+                ElMessageBox.alert('Something went wrong getting applicable materials' + error)
             })
         },
         handleOrderEdit(index, row) {
@@ -131,12 +219,12 @@ export default {
             this.drawer = true
         },
         handleOrderDelete(index, row) {
-            let apiUrl = "/product/orders" + row.productOrderId
+            let apiUrl = "/product/order/" + row.productOrderId
 
             axios.delete(apiUrl).then(() => {
-                this.orders.splice(this.orders.indexOf(row), 1)
+                this.productOrders.splice(this.productOrders.indexOf(row), 1)
             }).catch(error => {
-                ElMessageBox.alert('Product has likely been used in an order and can\'t be deleted. ' + error)
+                ElMessageBox.alert('Something went wrong: ' + error)
             })
         },
         handleCloseDrawer() {
@@ -144,19 +232,78 @@ export default {
                 .then(() => {
                     this.selectedOrder = {name: '', product:{ sku:''}, sku:'', color:'', prodMatExpenditure:'', materialType:{materialTypeId: '', type: ''} }
                     this.drawer = false
-                    this.fetchOrders()
+                    this.fetchProductOrders()
                 })
         },
-      dateFormatter(row) {
-        return moment(row).format('MM-DD-YYYY')
-      }
+        dateFormatter(row) {
+            return moment(row.dateCreated).format('MM-DD-YYYY')
+        },
+        booleanFormatter(row) {
+            return row.completed ? 'Yes' : 'No'
+        },
+
+        tableRowClassName({row}) {
+            if(row.completed === true) {
+                return 'success-row'
+            }
+            return ''
+        },
+
+        handleBeginOrderComplete(index, row) {
+            if(row.product) {
+                this.orderToComplete = row
+                this.fetchApplicableMaterials(row.product.materialType.materialTypeId, row.color.colorId)
+                this.materialSelectDialogVisible = true
+            }
+            else {
+                this.orderToComplete = row
+                this.fetchApplicableMaterials(row.productAccessory.materialType.materialTypeId, row.color.colorId)
+                this.materialSelectDialogVisible = true
+            }
+        },
+        handleCurrentChange(newRow) {
+            this.selectedMaterial = newRow
+        },
+        handleOrderComplete() {
+            let apiUrl = ''
+            let calcMaterialUsedId = null
+            this.orderToComplete.product ?
+                apiUrl = "/product/order/complete/" + this.orderToComplete.productOrderId
+                :
+                apiUrl = "/product-accessory/order/complete/" + this.orderToComplete.accessoryOrderId
+
+            calcMaterialUsedId = this.selectedMaterial.productionMaterialCalculatedId
+            if(calcMaterialUsedId === undefined || null) {
+                ElMessageBox.alert('Please select a material from the table', 'Error')
+            }
+            else {
+                axios.put(apiUrl, null, {params: {calcMaterialUsedId}}).then((res) => {
+                    console.log(res)
+                    this.fetchProductOrders()
+                    this.materialSelectDialogVisible = false
+                }).catch((error) => {
+                    ElMessageBox.alert('Something went wrong' + error)
+                })
+            }
+        },
+        handleCloseCompleteDialog() {
+            this.materialSelectDialogVisible = false
+        },
+
+        handleAccOrderDelete(index, row) {
+            let apiUrl = "/product-accessory/order/" + row.accessoryOrderId
+
+            axios.delete(apiUrl).then(() => {
+                this.fetchProductOrders()
+            }).catch(error => {
+                ElMessageBox.alert('Something went wrong: ' + error)
+            })
+        }
     }
 
 }
 
 </script>
-
-
 
 <style scoped>
     .orders-view-container {

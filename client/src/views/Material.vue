@@ -45,9 +45,10 @@
 
                             <el-table-column>
                                 <template #header>
-                                    <el-row justify="space-around">
-                                        <el-col :span="2" >
+                                    <el-row justify="space-around" style="align-items: center">
+                                        <el-col :span="5" >
                                             <el-button :icon="Refresh" circle plain size="small" @click.stop="fetchAuditMaterial"></el-button>
+                                            <label style="margin-left:10px; font-family: 'Product Sans', sans-serif">Materials - Audit</label>
                                         </el-col>
                                         <el-col :span="5" style="margin-left:auto;">
                                             <el-input v-model="search" placeholder="Search by name or manufacturer" :suffix-icon="Search"/>
@@ -93,8 +94,9 @@
                             <el-table-column>
                                 <template #header>
                                     <el-row justify="space-around">
-                                        <el-col :span="2" >
+                                        <el-col :span="5" >
                                             <el-button :icon="Refresh" circle plain size="small" @click.stop="fetchCalcMaterial"></el-button>
+                                            <label style="margin-left:10px; font-family: 'Product Sans', sans-serif">Materials - Calculated</label>
                                         </el-col>
                                         <el-col :span="5" style="margin-left:auto;">
                                             <el-input v-model="search" placeholder="Search by name or manufacturer" :suffix-icon="Search"/>
@@ -220,7 +222,7 @@ export default {
         },
 
         dateFormatter(row) {
-            return moment(row).format('MM-DD-YYYY')
+            return moment(row.dateInserted).format('MM-DD-YYYY')
         }
     }
 }

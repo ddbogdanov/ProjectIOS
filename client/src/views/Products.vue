@@ -33,41 +33,12 @@
                             class="products-table" v-loading="loadingTable"
                             stripe height="100%">
 
-                    <el-table-column type="expand" #default="scope">
-                        <el-table :data="products[(products.indexOf(scope.row))].productAccessories" class="products-subtable">
-                            <el-table-column :label="'Accessories - ' + products[(products.indexOf(scope.row))].sku">
-                                <el-table-column prop="name" label="Name"></el-table-column>
-                                <el-table-column label="Size">
-                                    <el-table-column prop="size" label="Accessory Size (in)"></el-table-column>
-                                    <el-table-column prop="prodMatExpenditure" label="Material to Produce (in)"></el-table-column>
-                                </el-table-column>
-                                <el-table-column prop="materialType.type" label="Material Type"></el-table-column>
-                                <el-table-column label="Actions" align="right">
-                                    <template #default="scope">
-                                        <el-popconfirm
-                                            :title="'Are you sure you want to delete accessory: ' + scope.row.name + '?'"
-                                            confirm-button-type="danger"
-                                            cancel-button-type="info"
-                                            cancel-button-text="No, Dont Delete"
-                                            icon-color="red"
-                                            @confirm.stop="handleAccessoryDelete(scope.$index, scope.row)"
-                                        >
-                                            <template #reference>
-                                                <el-button :icon="Delete" type="danger" circle></el-button>
-                                            </template>
-                                        </el-popconfirm>
-                                    </template>
-                                </el-table-column>
-                            </el-table-column>
-                        </el-table>
-                    </el-table-column>
-
                     <el-table-column>
                         <template #header>
-                            <el-row justify="space-between">
+                            <el-row justify="space-between" style="align-items: center">
                                 <el-col :span="16">
                                     <el-button :icon="Refresh" circle plain size="small" @click.stop="fetchProducts"></el-button>
-                                    <label style="margin-left:10px">Products</label>
+                                    <label style="margin-left:10px; font-family: 'Product Sans', sans-serif">Products</label>
                                 </el-col>
                                 <el-col :span="8">
                                     <el-input v-model="search" placeholder="Search by name or SKU" :suffix-icon="Search" style="float: right; width: 250px"/>
@@ -75,17 +46,50 @@
                             </el-row>
                         </template>
 
-                        <el-table-column prop="name" label="Name" sortable></el-table-column>
-                        <el-table-column prop="sku" label="SKU" sortable></el-table-column>
+                        <el-table-column type="expand" #default="scope">
+                            <el-table :data="products[(products.indexOf(scope.row))].productAccessories" class="products-subtable">
+                                <el-table-column :label="'Accessories - ' + products[(products.indexOf(scope.row))].sku">
+                                    <el-table-column prop="name" label="Name"></el-table-column>
+                                    <el-table-column label="Size">
+                                        <el-table-column prop="size" label="Accessory Size (in)"></el-table-column>
+                                        <el-table-column prop="prodMatExpenditure" label="Material to Produce (in)"></el-table-column>
+                                    </el-table-column>
+                                    <el-table-column prop="materialType.type" label="Material Type"></el-table-column>
+                                    <el-table-column label="Actions" align="right">
+                                        <template #default="scope">
+                                            <el-popconfirm
+                                                :title="'Are you sure you want to delete accessory: ' + scope.row.name + '?'"
+                                                confirm-button-type="danger"
+                                                cancel-button-type="info"
+                                                cancel-button-text="No, Dont Delete"
+                                                icon-color="red"
+                                                @confirm.stop="handleAccessoryDelete(scope.$index, scope.row)"
+                                            >
+                                                <template #reference>
+                                                    <el-button :icon="Delete" type="danger" circle></el-button>
+                                                </template>
+                                            </el-popconfirm>
+                                        </template>
+                                    </el-table-column>
+                                </el-table-column>
+                            </el-table>
+                        </el-table-column>
+
+                        <el-table-column prop="name" label="Name" sortable min-width="150"></el-table-column>
+                        <el-table-column prop="sku" label="SKU" sortable align="right"></el-table-column>
 
                         <el-table-column label="Size">
-                            <el-table-column prop="size" label="Product Size (in)" sortable></el-table-column>
-                            <el-table-column prop="prodMatExpenditure" label="Material to Produce (in)" sortable></el-table-column>
-                            <el-table-column prop="materialType.type" label="Material Type"></el-table-column>
+                            <el-table-column prop="size" label="Product Size (in)" sortable align="right"></el-table-column>
+                            <el-table-column prop="prodMatExpenditure" label="Material to Produce (in)" sortable align="right"></el-table-column>
+                            <el-table-column prop="materialType.type" label="Material Type" align="right"></el-table-column>
                         </el-table-column>
 
                         <el-table-column label="Actions" align="right">
                             <template #default="scope">
+
+                                <el-tooltip effect="light" content="Order" placement="left">
+                                    <el-button :icon="CircleCheck" type="success" circle @click="handleProductOrder(scope.$index, scope.row)"></el-button>
+                                </el-tooltip>
 
                                 <el-tooltip effect="light" content="Edit" placement="left">
                                     <el-button :icon="Edit" type="primary" circle @click="handleProductEdit(scope.$index, scope.row)"></el-button>
@@ -111,6 +115,9 @@
             <el-drawer v-model="drawer" title="Add or Edit Product" direction="ltr" :before-close="handleCloseDrawer" destroy-on-close>
                 <ProductForm :productProp='selectedProduct'/>
             </el-drawer>
+            <el-drawer v-model="orderDrawer" :title="'Create a Work Order for SKU: ' + selectedProduct.sku" direction="ltr" :before-close="handleCloseOrderDrawer" destroy-on-close>
+                <OrderForm :productProp="selectedProduct"/>
+            </el-drawer>
         </el-container>
     </section>
 </template>
@@ -120,20 +127,21 @@
 <script>
 import axios from "axios";
 import {ElMessageBox} from "element-plus";
-import {Delete, Edit, Search, Refresh, DocumentAdd} from "@element-plus/icons-vue"
-import ProductForm from "@/components/forms/ProductForm";
+import {Delete, Edit, Search, Refresh, DocumentAdd, CircleCheck} from "@element-plus/icons-vue"
+import ProductForm from "@/components/forms/ProductForm"
+import OrderForm from "@/components/forms/OrderForm"
 import {shallowRef} from "vue";
 
 export default {
     name: "Products",
-    components: { ProductForm },
+    components: { ProductForm, OrderForm },
     data() {
         return {
             products: [ ],
             search: '',
             loadingTable: false,
-            drawer: shallowRef(false),
-            Delete: shallowRef(Delete), Edit: shallowRef(Edit), Search: shallowRef(Search), Refresh: shallowRef(Refresh), DocumentAdd: shallowRef(DocumentAdd),
+            drawer: shallowRef(false), orderDrawer: shallowRef(false),
+            Delete: shallowRef(Delete), Edit: shallowRef(Edit), Search: shallowRef(Search), Refresh: shallowRef(Refresh), DocumentAdd: shallowRef(DocumentAdd), CircleCheck: shallowRef(CircleCheck),
             selectedProduct: {name: '', size:'', sku:'', prodMatExpenditure:'', materialType:{materialTypeId: '', type: ''}, productAccessories:[{}] }
         }
     },
@@ -141,6 +149,10 @@ export default {
         this.$bus.on('closeProductForm', () => {
             this.drawer = false
             this.fetchProducts()
+        })
+
+        this.$bus.on('closeOrderForm', () => {
+            this.orderDrawer = false
         })
     },
     created() {
@@ -186,6 +198,18 @@ export default {
                     this.selectedProduct = {name: '', size:'', sku:'', prodMatExpenditure:'', materialType:{materialTypeId: '', type: ''}, productAccessories:[{}] }
                     this.drawer = false
                     this.fetchProducts()
+                })
+        },
+
+        // Order form stuff
+        handleProductOrder(index, row) {
+            this.selectedProduct = row
+            this.orderDrawer = true
+        },
+        handleCloseOrderDrawer() {
+            ElMessageBox.confirm('Are you sure want to close the order form?')
+                .then(() => {
+                    this.orderDrawer = false
                 })
         }
     }

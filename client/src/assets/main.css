@@ -21,3 +21,10 @@ html, body {
 .orders-view {
     height: Calc(100% - 66px)
 }
+
+.el-table .success-row {
+    --el-table-tr-bg-color: var(--el-color-success-light-7);
+}
+.el__table .--striped .success-row {
+    --el-table-tr-bg-color: var(--el-color-success-light-7);
+}
