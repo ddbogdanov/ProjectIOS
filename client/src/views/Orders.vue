@@ -108,7 +108,7 @@
 
                         <el-button :icon="Check" type="success" circle v-if="!scope.row.completed" @click.stop="handleBeginOrderComplete(scope.$index, scope.row)"></el-button>
 
-                        <el-tooltip effect="light" content="Edit" placement="top-start">
+                        <el-tooltip effect="light" content="Edit" placement="top-start" v-if="!scope.row.completed">
                             <el-button :icon="Edit" type="primary" circle @click="handleOrderEdit(scope.$index, scope.row)"></el-button>
                         </el-tooltip>
                         <el-popconfirm
@@ -118,6 +118,7 @@
                             cancel-button-text="No, Dont Delete"
                             icon-color="red"
                             @confirm.stop="handleOrderDelete(scope.$index, scope.row)"
+                            v-if="!scope.row.completed"
                         >
                             <template #reference>
                                 <el-button :icon="Delete" type="danger" circle></el-button>

@@ -3,6 +3,8 @@
         <el-main>
             <el-form :model="productOrder" ref="orderFormRef" label-position="top" :rules="orderFormRules">
 
+                <h1>Product Order</h1>
+
                 <el-form-item label="Quantity" prop="quantity">
                     <el-input-number v-model="productOrder.quantity" :controls="false"></el-input-number>
                 </el-form-item>
@@ -18,10 +20,20 @@
                     </el-select>
                 </el-form-item>
 
+                <el-divider></el-divider>
+
+                <div style="display: inline-flex;">
+                    <h3>Accessory Orders</h3>
+                    <el-divider direction="vertical"></el-divider>
+                    <el-tooltip effect="light" content="Add an additional accessory order" placement="right">
+                        <el-button :icon="Plus" type="plain" size="small" circle plain @click="addOneAccessoryOrder"></el-button>
+                    </el-tooltip>
+                </div>
+
                 <el-form-item prop="accessoryOrders">
                     <template v-for="accessoryOrder in productOrder.accessoryOrders" :key="accessoryOrder.accessoryOrderId">
                         <el-divider class="accessory-divider"></el-divider>
-
+                        <h1>{{accessoryOrder.productAccessory.name}}</h1>
                         <el-form-item label="Quantity">
                             <el-input-number v-model="accessoryOrder.quantity"></el-input-number>
                         </el-form-item>
@@ -52,6 +64,34 @@
                     </el-col>
                 </el-row>
             </el-form>
+
+            <el-dialog v-model="accessoryOrderDialogVisible" title="Add Accessory(ies) to Order">
+                <el-table :data="accessories.filter((data) => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
+                          ref="accTableRef" height="100%" @selection-change="handleSelectionChange"
+                >
+                    <el-table-column>
+                        <template #header>
+                            <el-row justify="space-around" style="align-items: center"> <!-- TODO: ALIGN ITEMS CENTER EVERYWHERE -->
+                                <el-col :span="5" >
+                                    <label style="margin-left:10px; font-family: 'Product Sans', sans-serif">Accessories</label>
+                                </el-col>
+                                <el-col :span="5" style="margin-left:auto;">
+                                    <el-input v-model="search" placeholder="Search by name" :suffix-icon="Search"/>
+                                </el-col>
+                            </el-row>
+                        </template>
+                        <el-table-column type="selection" width="55"/>
+                        <el-table-column prop="name" label="Name"></el-table-column>
+                        <el-table-column prop="size" label="Size"></el-table-column>
+                        <el-table-column prop="materialType.type" label="Material Type"></el-table-column>
+                    </el-table-column>
+                </el-table>
+
+                <template #footer>
+                    <el-button plain @click="handleCloseAccessoryDialog">Cancel</el-button>
+                    <el-button type="success" @click.stop="handleAddAccessories">Confirm</el-button>
+                </template>
+            </el-dialog>
         </el-main>
     </el-container>
 </template>
@@ -74,6 +114,7 @@ export default {
             productOrder: {accessoryOrders: [], color: {color:''}, quantity: 0, comments: ''},
             Plus: shallowRef(Plus), Minus: shallowRef(Minus),
 
+            accessoryOrderDialogVisible: false, accessories: [], search: '', tableSelection: [],
             orderFormRules: [{}]
         }
     },
@@ -140,10 +181,38 @@ export default {
                 ElMessageBox.alert("Something went wrong: " + error)
             })
         },
+        fetchAccessories() {
+            let apiUrl = "/product-accessories"
+
+            axios.get(apiUrl).then((res) => {
+                this.accessories = res.data
+            }).catch((error) => {
+                ElMessageBox.alert('Something went wrong' + error)
+            })
+        },
         onCancel() {
             this.$refs.orderFormRef.resetFields()
             this.$bus.trigger('closeOrderForm')
         },
+
+        addOneAccessoryOrder() {
+            this.fetchAccessories()
+            this.accessoryOrderDialogVisible = true
+        },
+        handleSelectionChange(selection) {
+            this.tableSelection = selection
+        },
+        handleCloseAccessoryDialog() {
+            this.accessoryOrderDialogVisible = false
+        },
+        handleAddAccessories() {
+            for(let i=0; i<this.tableSelection.length; i++) {
+                let ts = {}
+                ts["productAccessory"] = this.tableSelection[i]
+                this.productOrder.accessoryOrders.push(ts)
+            }
+            this.accessoryOrderDialogVisible = false
+        } //TODO REMOVE ACCESSORY FROM ORDER
     }
 }
 </script>
