@@ -37,7 +37,7 @@ data class AccessoryOrder
     @ManyToOne(fetch=FetchType.LAZY, cascade=[CascadeType.REFRESH]) //Specifies the material used to complete the order
     @JoinColumn(name="p_m_calc_id")
     @JsonIgnoreProperties("color", "materialType", "manufacturer", "amount", "name")
-    var productionCalcMaterialUsed: CalculatedMaterial,
+    var productionCalcMaterialUsed: CalculatedMaterial?,
 
     @Column(name="quantity")
     val quantity: Int,
