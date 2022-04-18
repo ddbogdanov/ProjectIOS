@@ -32,7 +32,30 @@
                         </el-col>
                     </el-row>
 
-                    <el-divider id="secondary-divider"/>
+
+
+                    <el-row id="materials-total-row" style="margin-top: auto; margin-bottom: auto">
+                        <el-divider class="secondary-divider"/>
+                        <el-col>
+                            <h1 id="materials-total-label">Total Unique Materials:</h1>
+                            <label id="materials-count-label">{{calcMaterial.length}}</label>
+                        </el-col>
+                        <el-divider class="secondary-divider"/>
+                    </el-row>
+
+
+
+                    <el-row style="margin-left: 20px; margin-right: 20px; margin-top: auto; margin-bottom: 20px">
+                        <el-col>
+                            <el-card>
+                                <apexchart
+                                    type="line"
+                                    :options="chartOptions"
+                                    :series="series"
+                                ></apexchart>
+                            </el-card>
+                        </el-col>
+                    </el-row>
                 </el-container>
             </el-aside>
 
@@ -143,6 +166,62 @@ export default {
             loadingAuditTable: false, loadingCalcTable: false,
             DocumentAdd: shallowRef(DocumentAdd), Document: shallowRef(Document), ArrowDown: shallowRef(ArrowDown), Edit: shallowRef(Edit), Delete: shallowRef(Delete), Refresh: shallowRef(Refresh), Search: shallowRef(Search),
             selectedMaterial: {name: '', amount: '', color: {colorId: '', color: ''}, manufacturer: {manufacturerId: '', manufacturer: ''}, materialType: {materialTypeId: '', type: ''}},
+
+            chartOptions: {
+                chart: {
+                    id: "vuechart",
+                    toolbar: {
+                        tools: {
+                            download: true,
+                            selection: false,
+                            zoom: false,
+                            zoomin: false,
+                            zoomout: false,
+                            pan: false,
+                        }
+                    },
+                },
+                title: {
+                    text: "Material Additions and Deductions",
+                    style: {
+                        fontFamily: 'Product Sans'
+                    },
+                },
+                subtitle: {
+                    text: "In the past week",
+                    style: {
+                        fontFamily: 'Product Sans'
+                    },
+                },
+                xaxis: {
+                    categories: [],
+                    labels: {
+                        show: false
+                    },
+                    show: false, axisBorder: { show: false, }
+                },
+                yaxis: {
+                    labels: {
+                        show: false
+                    },
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                legend: {
+                    show: false
+                },
+                theme: {
+                    mode: 'light',
+                    palette: 'palette1'
+                }
+            },
+            series: [
+                {
+                    name: "amount",
+                    data: [],
+                },
+            ],
         }
     },
     mounted() {
@@ -154,6 +233,7 @@ export default {
     created() {
         this.fetchAuditMaterial()
         this.fetchCalcMaterial()
+        this.fetchChartData()
     },
     methods: {
         fetchAuditMaterial() {
@@ -201,14 +281,13 @@ export default {
                 })
         },
 
-
         generateMaterialReport() {
             let apiUrl = "/report/calculated-material"
 
             axios.get(apiUrl, {responseType: 'blob'}).then((res) => {
                 window.open(URL.createObjectURL(res.data))
             }).catch((error) => {
-                ElMessageBox.alert("Something went wrong" + error)
+                ElMessageBox.alert("Something went wrong " + error)
             })
         },
         generateUsageReport() {
@@ -218,6 +297,21 @@ export default {
                 window.open(URL.createObjectURL(res.data))
             }).catch(error => {
                 alert(error)
+            })
+        },
+        fetchChartData() {
+            let apiUrl = "/material-usage-audit/week"
+
+            axios.get(apiUrl).then((res) => {
+                let resData = res.data
+
+                for(let i=0; i<resData.length; i++) {
+                    this.chartOptions.xaxis.categories.push(resData[i].datePerformed)
+                    this.series[0].data.push(resData[i].deltaAmount)
+                }
+
+            }).catch(error => {
+                ElMessageBox.alert("Something went wrong " + error)
             })
         },
 
@@ -242,9 +336,8 @@ export default {
 .material-dash-container {
     font-family: 'Product Sans', sans-serif;
     text-align: center;
-    justify-items: center;
     align-content: center;
-    justify-content: center;
+    height: 100%;
 }
 .material-dash-header {
     display: flex;
@@ -274,11 +367,11 @@ export default {
     color: #FFAE42;
     background-color: #FFAE42;
 }
-#secondary-divider {
+.secondary-divider {
     height: 2px;
-    width: 50%;
-    margin-left: 25%;
-    margin-right: 25%;
+    width: 60%;
+    margin-left: 20%;
+    margin-right: 20%;
     border: none;
     color: #FFAE42;
     background-color: #FFAE42;
@@ -286,5 +379,14 @@ export default {
 
 #material-aside-label {
     font-size: 2em;
+}
+#materials-aside-label {
+    font-size: 2em;
+}
+#materials-total-label {
+    font-size: 1.5em;
+}
+#materials-count-label {
+    font-size: 6em;
 }
 </style>

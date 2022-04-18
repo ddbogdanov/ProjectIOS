@@ -22,7 +22,7 @@
 
                 <el-divider></el-divider>
 
-                <div style="display: inline-flex;">
+                <div style="display: inline-flex; align-items: center;">
                     <h3>Accessory Orders</h3>
                     <el-divider direction="vertical"></el-divider>
                     <el-tooltip effect="light" content="Add an additional accessory order" placement="right">
@@ -33,7 +33,23 @@
                 <el-form-item prop="accessoryOrders">
                     <template v-for="accessoryOrder in productOrder.accessoryOrders" :key="accessoryOrder.accessoryOrderId">
                         <el-divider class="accessory-divider"></el-divider>
-                        <h1>{{accessoryOrder.productAccessory.name}}</h1>
+
+                        <div v-if="!accessoryOrder.completed">
+                        <el-row style="width: 100%; align-items: center; justify-content: center">
+                            <div>
+                                <div style="display: inline-flex; align-items: center;">
+
+                                    <h1 style="font-size: 1em;">Accessory:</h1>
+                                    <p style="margin-left: 10px;">{{accessoryOrder.productAccessory.name}}</p>
+                                    <el-divider direction="vertical"></el-divider>
+
+                                    <el-tooltip effect="light" content="Remove this accessory from order" placement="right">
+                                        <el-button :icon="Minus" type="danger" size="small" circle plain @click="removeOneAccessoryOrder(accessoryOrder)"></el-button>
+                                    </el-tooltip>
+                                </div>
+                                <el-divider style="width: 100%; margin-top: 5px"></el-divider>
+                            </div>
+                        </el-row>
                         <el-form-item label="Quantity">
                             <el-input-number v-model="accessoryOrder.quantity"></el-input-number>
                         </el-form-item>
@@ -47,9 +63,9 @@
                                 ></el-option>
                             </el-select>
                         </el-form-item>
+                        </div>
                     </template>
                 </el-form-item>
-
                 <el-form-item label="Comments" prop="comments">
                     <el-input v-model="productOrder.comments" type="textarea"></el-input>
                 </el-form-item>
@@ -148,14 +164,15 @@ export default {
                 else {
 
                     if(this.editing) {
-                        let apiUrl = "/product/order/" + this.productOrderId
+                        let apiUrl = "/product/order/" + this.productOrder.productOrderId
+                        alert(JSON.stringify(this.productOrder))
 
                         axios.put(apiUrl, this.productOrder).then((res) => {
                             console.log(res)
                             this.$refs.orderFormRef.resetFields()
                             this.$bus.trigger('closeOrderForm')
                         }).catch((error) => {
-                            ElMessageBox.alert('Someting went wrong' + error)
+                            ElMessageBox.alert('Something went wrong' + error)
                         })
                     }
                     else {
@@ -212,7 +229,10 @@ export default {
                 this.productOrder.accessoryOrders.push(ts)
             }
             this.accessoryOrderDialogVisible = false
-        } //TODO REMOVE ACCESSORY FROM ORDER
+        },
+        removeOneAccessoryOrder(accessory) {
+            this.productOrder.accessoryOrders.splice(this.productOrder.accessoryOrders.indexOf(accessory), 1)
+        }
     }
 }
 </script>

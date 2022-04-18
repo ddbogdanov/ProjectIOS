@@ -10,6 +10,7 @@
   "dependencies": {
     "@element-plus/icons": "^0.0.11",
     "@element-plus/icons-vue": "^1.1.4",
+    "apexcharts": "^3.35.0",
     "axios": "^0.26.1",
     "core-js": "^3.8.3",
     "element-plus": "^2.1.8",
@@ -17,6 +18,8 @@
     "moment": "^2.29.2",
     "vue": "^3.2.13",
     "vue-router": "^4.0.14",
+    "vue3-apexcharts": "^1.4.1",
+    "vue3-cookies": "^1.0.6",
     "vuex": "^4.0.2",
     "vuex-persistedstate": "^4.1.0"
   },

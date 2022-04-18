@@ -1,21 +1,34 @@
 <template>
-    <NavBar class="nav-bar"/>
-    <router-view/>
+    <NavBar class="nav-bar" v-if="isLoggedIn"/>
+    <router-view v-if="isLoggedIn"/>
+    <Login v-if="!isLoggedIn"/>
 </template>
 
 <script>
-//import Login from "@/components/Login";
-
+import Login from "@/views/Login";
 import NavBar from "@/components/NavBar";
+
 export default {
     name: 'App',
-    setup() {
+
+    data() {
+        return {
+            isLoggedIn: false
+        }
+    },
+    mounted() {
+        this.$bus.on('login', () => {
+            this.isLoggedIn = true
+        })
+        this.$bus.on('logout', () => {
+            this.isLoggedIn = false
+        })
     },
     components: {
-        NavBar
+        NavBar, Login
     },
     computed : {
-        //isLoggedIn : function(){ return this.$store.getters.isAuthenticated}
+
     },
 }
 </script>

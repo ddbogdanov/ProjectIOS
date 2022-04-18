@@ -52,7 +52,7 @@
                         <el-table-column :label="'Accessory Orders - ID: #' + productOrders[(productOrders.indexOf(scope.row))].productOrderId">
                             <el-table-column label="Accessory Info">
                                 <el-table-column prop="productAccessory.name" label="Name"></el-table-column>
-                                <el-table-column prop="productAccessory.materialType.type" label="Quantity"></el-table-column>
+                                <el-table-column prop="productAccessory.materialType.type" label="Material Type"></el-table-column>
                             </el-table-column>
                             <el-table-column label="Order Info">
                                 <el-table-column prop="quantity" label="Quantity"></el-table-column>
@@ -72,6 +72,7 @@
                                         cancel-button-text="No, Dont Delete"
                                         icon-color="red"
                                         @confirm.stop="handleAccOrderDelete(scope.$index, scope.row)"
+                                        v-if="!scope.row.completed"
                                     >
                                         <template #reference>
                                             <el-button :icon="Delete" type="danger" circle></el-button>
