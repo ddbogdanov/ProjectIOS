@@ -2,8 +2,9 @@
     <el-container class="form-container">
         <el-main>
             <el-form :model="productOrder" ref="orderFormRef" label-position="top" :rules="orderFormRules">
-
-                <h1>Product Order</h1>
+                <el-divider>
+                    <h3>Product Order</h3>
+                </el-divider>
 
                 <el-form-item label="Quantity" prop="quantity">
                     <el-input-number v-model="productOrder.quantity" :controls="false"></el-input-number>
@@ -20,40 +21,38 @@
                     </el-select>
                 </el-form-item>
 
-                <el-divider></el-divider>
+                <el-divider style="margin-top: 40px">
 
                 <div style="display: inline-flex; align-items: center;">
                     <h3>Accessory Orders</h3>
                     <el-divider direction="vertical"></el-divider>
                     <el-tooltip effect="light" content="Add an additional accessory order" placement="right">
-                        <el-button :icon="Plus" type="plain" size="small" circle plain @click="addOneAccessoryOrder"></el-button>
+                        <el-button :icon="Plus" size="small" circle plain @click="addOneAccessoryOrder"></el-button>
                     </el-tooltip>
                 </div>
+                </el-divider>
 
                 <el-form-item prop="accessoryOrders">
                     <template v-for="accessoryOrder in productOrder.accessoryOrders" :key="accessoryOrder.accessoryOrderId">
-                        <el-divider class="accessory-divider"></el-divider>
-
                         <div v-if="!accessoryOrder.completed">
                         <el-row style="width: 100%; align-items: center; justify-content: center">
-                            <div>
-                                <div style="display: inline-flex; align-items: center;">
 
-                                    <h1 style="font-size: 1em;">Accessory:</h1>
-                                    <p style="margin-left: 10px;">{{accessoryOrder.productAccessory.name}}</p>
-                                    <el-divider direction="vertical"></el-divider>
-
+                                <div style="display: inline-flex; align-items: center; justify-content: start">
                                     <el-tooltip effect="light" content="Remove this accessory from order" placement="right">
                                         <el-button :icon="Minus" type="danger" size="small" circle plain @click="removeOneAccessoryOrder(accessoryOrder)"></el-button>
                                     </el-tooltip>
+                                    <el-divider direction="vertical"></el-divider>
+                                    <h1 style="font-size: 1em;">Accessory:</h1>
+                                    <p style="margin-left: 10px;">{{accessoryOrder.productAccessory.name}}</p>
                                 </div>
                                 <el-divider style="width: 100%; margin-top: 5px"></el-divider>
-                            </div>
+
+
                         </el-row>
                         <el-form-item label="Quantity">
-                            <el-input-number v-model="accessoryOrder.quantity"></el-input-number>
+                            <el-input-number v-model="accessoryOrder.quantity" :controls="false"></el-input-number>
                         </el-form-item>
-                        <el-form-item label="Color">
+                        <el-form-item label="Color" style="margin-top: 5px">
                             <el-select v-model="accessoryOrder.color" filterable clearable value-key="colorId">
                                 <el-option
                                     v-for="color in colors"
@@ -64,6 +63,7 @@
                             </el-select>
                         </el-form-item>
                         </div>
+                        <el-divider class="accessory-divider"></el-divider>
                     </template>
                 </el-form-item>
                 <el-form-item label="Comments" prop="comments">
@@ -81,9 +81,9 @@
                 </el-row>
             </el-form>
 
-            <el-dialog v-model="accessoryOrderDialogVisible" title="Add Accessory(ies) to Order">
-                <el-table :data="accessories.filter((data) => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
-                          ref="accTableRef" height="100%" @selection-change="handleSelectionChange"
+            <el-dialog v-model="accessoryOrderDialogVisible" title="Add Accessory(ies) to Order" destroy-on-close>
+                <el-table :data="accessories.filter((data) => !dialogSearch || data.name.toLowerCase().includes(dialogSearch.toLowerCase()))"
+                          ref="accTableRef" height="50vh" @selection-change="handleSelectionChange"
                 >
                     <el-table-column>
                         <template #header>
@@ -92,7 +92,7 @@
                                     <label style="margin-left:10px; font-family: 'Product Sans', sans-serif">Accessories</label>
                                 </el-col>
                                 <el-col :span="5" style="margin-left:auto;">
-                                    <el-input v-model="search" placeholder="Search by name" :suffix-icon="Search"/>
+                                    <el-input v-model="dialogSearch" placeholder="Search by name" :suffix-icon="Search"/>
                                 </el-col>
                             </el-row>
                         </template>
@@ -115,7 +115,7 @@
 <script>
 import axios from "axios";
 import {ElMessageBox} from "element-plus";
-import {Plus, Minus} from "@element-plus/icons-vue"
+import {Plus, Minus, Search} from "@element-plus/icons-vue"
 import {shallowRef} from "vue";
 
 export default {
@@ -128,9 +128,9 @@ export default {
             colors: [],
             product: {}, editing: false,
             productOrder: {accessoryOrders: [], color: {color:''}, quantity: 0, comments: ''},
-            Plus: shallowRef(Plus), Minus: shallowRef(Minus),
+            Plus: shallowRef(Plus), Minus: shallowRef(Minus), Search: shallowRef(Search),
 
-            accessoryOrderDialogVisible: false, accessories: [], search: '', tableSelection: [],
+            accessoryOrderDialogVisible: false, accessories: [], dialogSearch: '', tableSelection: [],
             orderFormRules: [{}]
         }
     },

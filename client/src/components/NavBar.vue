@@ -43,6 +43,7 @@ export default {
                     cancelButtonText: 'No',
                 }).then(() => {
                     this.$bus.trigger('logout')
+                    this.$router.push('/')
                 }).catch(() => {
                     this.$router.push(this.$route.path)
                 })

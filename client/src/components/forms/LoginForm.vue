@@ -151,6 +151,6 @@ export default {
     width: 100%;
     border: none;
     background: rgb(255,174,66);
-    background: linear-gradient(90deg, rgba(255,174,66,1) 0%, rgba(131,41,255,1) 50%, rgba(54,77,255,1) 100%);
+    background: linear-gradient(90deg, rgba(255,174,66,1) 0%, rgba(131,41,255,1) 70%, rgba(54,77,255,1) 100%);
 }
 </style>

@@ -17,10 +17,10 @@
                         <el-col style="margin-top: 20px">
                             <h1 style="font-size: 1.5em;">Actions</h1>
                             <div style="margin-top: 10px;">
-                                <el-button type="success" plain round :icon="DocumentAdd" @click="drawer=true">Add New Material</el-button>
+                                <el-button type="success" round :icon="DocumentAdd" @click="drawer=true">Add New Material</el-button>
                                 <el-divider direction="vertical" style="background-color: #FFAE42"></el-divider>
                                 <el-dropdown trigger="click">
-                                    <el-button type="plain" plain round :icon="ArrowDown">Generate Report</el-button>
+                                    <el-button type="plain" round :icon="ArrowDown">Generate Report</el-button>
                                     <template #dropdown>
                                         <el-dropdown-menu>
                                             <el-dropdown-item @click="generateMaterialReport" :icon="Document">Material Report</el-dropdown-item>

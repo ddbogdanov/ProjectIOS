@@ -23,29 +23,30 @@
                 </el-row>
 
                 <el-row justify="space-between">
-                    <el-col :span="7">
+                    <el-col :span="12">
                         <el-form-item label="Size" prop="size">
                             <el-input-number v-model="product.size" :controls="false"></el-input-number>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="7">
-                        <el-form-item label="Material to Produce" prop="prodMatExpenditure">
+                    <el-col :span="12">
+                        <el-form-item label="Material to Produce" prop="prodMatExpenditure" style="float: right">
                             <el-input-number v-model="product.prodMatExpenditure" :controls="false"></el-input-number>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="Material Type" prop="materialType">
-                            <el-select v-model="product.materialType" filterable clearable value-key="materialTypeId">
-                                <el-option
-                                    v-for="materialType in materialTypes"
-                                    :key="materialType.materialTypeId"
-                                    :label="materialType.type"
-                                    :value="materialType"
-                                ></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
                 </el-row>
+
+
+                <el-form-item label="Material Type" prop="materialType">
+                    <el-select v-model="product.materialType" filterable clearable value-key="materialTypeId">
+                        <el-option
+                            v-for="materialType in materialTypes"
+                            :key="materialType.materialTypeId"
+                            :label="materialType.type"
+                            :value="materialType"
+                        ></el-option>
+                    </el-select>
+                </el-form-item>
+
 
                 <el-divider></el-divider>
                 <div style="display: inline-flex">
@@ -58,53 +59,54 @@
 
 
                 <el-form-item prop="productAccessories" style="font-size: 2em">
-                        <template v-for="productAccessory in product.productAccessories" :key="productAccessory.productAccessoryId">
-                            <el-divider class="accessory-divider"></el-divider>
+                    <template v-for="productAccessory in product.productAccessories" :key="productAccessory.productAccessoryId">
+                        <el-divider class="accessory-divider"></el-divider>
 
-                            <el-row style="width: 100%; vertical-align: center;">
-                                <div>
-                                    <div style="display: inline-flex; vertical-align:middle;">
-                                        <h1 style="font-size: 1em;">Accessory: {{product.productAccessories.indexOf(productAccessory)}}</h1>
-                                        <el-divider direction="vertical"></el-divider>
-                                        <el-tooltip effect="light" content="Remove this accessory. (This will NOT delete the accessory if it already exists)" placement="right">
-                                            <el-button :icon="Minus" type="danger" size="small" circle plain @click="removeOneAccessory(productAccessory)"></el-button>
-                                        </el-tooltip>
-                                    </div>
-                                <el-divider style="width: 100%; margin-top: 5px"></el-divider>
+                        <el-row style="width: 100%; align-items: center">
+                            <div>
+                                <div style="display: inline-flex; align-items: center;">
+                                    <h1 style="font-size: 1em;">Accessory: {{product.productAccessories.indexOf(productAccessory)}}</h1>
+                                    <el-divider direction="vertical"></el-divider>
+                                    <el-tooltip effect="light" content="Remove this accessory. (This will NOT delete the accessory if it already exists)" placement="right">
+                                        <el-button :icon="Minus" type="danger" size="small" circle plain @click="removeOneAccessory(productAccessory)"></el-button>
+                                    </el-tooltip>
                                 </div>
-                            </el-row>
+                            <el-divider style="width: 100%; margin-top: 5px"></el-divider>
+                            </div>
+                        </el-row>
 
-                            <el-col>
-                                <el-form-item label="Name">
-                                    <el-input v-model="productAccessory.name" ></el-input>
-                                </el-form-item>
-                            </el-col>
+                        <el-col>
+                            <el-form-item label="Name">
+                                <el-input v-model="productAccessory.name" ></el-input>
+                            </el-form-item>
+                        </el-col>
 
-                            <el-col style="margin-top: 20px">
+                        <el-row justify="space-between" style="width: 100%; margin-top: 10px">
+                            <el-col :span="12">
                                 <el-form-item label="Size">
                                     <el-input-number v-model="productAccessory.size" :controls="false"></el-input-number>
                                 </el-form-item>
                             </el-col>
-
-                            <el-col style="margin-top: 20px">
-                                <el-form-item label="Material to Produce">
+                            <el-col :span="12">
+                                <el-form-item label="Material to Produce" style="float: right">
                                     <el-input-number v-model="productAccessory.prodMatExpenditure" :controls="false"></el-input-number>
                                 </el-form-item>
                             </el-col>
+                        </el-row>
 
-                            <el-col style="margin-top: 20px">
-                                <el-form-item label="Material Type">
-                                    <el-select v-model="productAccessory.materialType" filterable clearable value-key="materialTypeId">
-                                        <el-option
-                                            v-for="materialType in materialTypes"
-                                            :key="materialType.materialTypeId"
-                                            :label="materialType.type"
-                                            :value="materialType"
-                                        ></el-option>
-                                    </el-select>
-                                </el-form-item>
-                            </el-col>
-                        </template>
+
+                        <el-form-item label="Material Type" style="margin-top: 10px;">
+                            <el-select v-model="productAccessory.materialType" filterable clearable value-key="materialTypeId">
+                                <el-option
+                                    v-for="materialType in materialTypes"
+                                    :key="materialType.materialTypeId"
+                                    :label="materialType.type"
+                                    :value="materialType"
+                                ></el-option>
+                            </el-select>
+                        </el-form-item>
+
+                    </template>
                 </el-form-item>
 
 

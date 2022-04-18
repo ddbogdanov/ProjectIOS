@@ -2,9 +2,15 @@ import { createRouter, createWebHistory } from "vue-router";
 import Products from "@/views/Products";
 import Material from "@/views/Material";
 import Orders from "@/views/Orders";
+import Login from "@/views/Login";
 
 
 const routes = [
+    {
+        path: "/",
+        name: "Login",
+        component: Login
+    },
     {
       path: "/products",
       name: "Products",

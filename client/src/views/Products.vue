@@ -17,7 +17,7 @@
                         <el-col>
                             <h1 style="font-size: 1.5em;">Actions</h1>
                             <el-button-group style="margin-top: 10px;">
-                                <el-button type="success" plain round :icon="DocumentAdd" @click="drawer=true">Create New Product</el-button>
+                                <el-button type="success" round :icon="DocumentAdd" @click="drawer=true">Create New Product</el-button>
                             </el-button-group>
                         </el-col>
                     </el-row>
@@ -146,7 +146,7 @@ export default {
             loadingTable: false,
             drawer: shallowRef(false), orderDrawer: shallowRef(false),
             Delete: shallowRef(Delete), Edit: shallowRef(Edit), Search: shallowRef(Search), Refresh: shallowRef(Refresh), DocumentAdd: shallowRef(DocumentAdd), CircleCheck: shallowRef(CircleCheck),
-            selectedProduct: {name: '', size:'', sku:'', prodMatExpenditure:'', materialType:{materialTypeId: '', type: ''}, productAccessories:[{}] }
+            selectedProduct: {name: '', size:'', sku:'', prodMatExpenditure:'', materialType:{materialTypeId: '', type: ''}, productAccessories:[] }
         }
     },
     mounted() {
