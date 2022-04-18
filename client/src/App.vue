@@ -19,6 +19,7 @@ export default {
     mounted() {
         this.$bus.on('login', () => {
             this.isLoggedIn = true
+            this.$router.push('/products')
         })
         this.$bus.on('logout', () => {
             this.isLoggedIn = false

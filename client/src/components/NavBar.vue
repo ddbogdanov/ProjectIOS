@@ -4,10 +4,10 @@
         class="nav-bar"
         mode="horizontal"
         @select="handleSelect"
-        background-color="#41464b"
+        background-color="#33333D"
         text-color="white"
         active-text-color="#FFAE42"
-        style="justify-content: right; flex-direction: row;"
+        style="justify-content: right; flex-direction: row; border-bottom: 0;"
     >
         <el-image :src="companyLogo" fit="scale-down" style="width: 360px; margin-left: 10px; margin-right: auto;" class="hidden-xs-only"/>
         <el-menu-item index="/products">Products</el-menu-item>
@@ -30,6 +30,9 @@ export default {
         }
     },
     mounted() {
+        this.$bus.on('login', () => {
+            this.currentRoute = this.$route.path
+        })
         this.currentRoute = this.$route.path
     },
     methods: {

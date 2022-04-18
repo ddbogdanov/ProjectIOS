@@ -38,7 +38,7 @@ export default {
 <style scoped>
 .login-background {
     height: 100%;
-    background: #424754;
+    background: #33333D;
 }
 .login {
     background-color: white;

@@ -3,22 +3,22 @@
         <el-container class="material-view-container">
             <el-aside class="material-dash-aside">
                 <el-container class="material-dash-container">
+                    <el-divider id="main-divider"/>
                     <el-header class="material-dash-header">
-                        <el-row>
+                        <el-row style="width: 100%;">
                             <el-col>
                                 <h1 id="material-aside-label">MATERIAL</h1>
                             </el-col>
+                            <el-divider class="secondary-divider" style="margin-top: 10px; margin-bottom: 10px;"/>
                         </el-row>
                     </el-header>
 
-                    <el-divider id="main-divider"/>
-
                     <el-row id="material-actions-row">
-                        <el-col>
+                        <el-col style="margin-top: 20px">
                             <h1 style="font-size: 1.5em;">Actions</h1>
                             <div style="margin-top: 10px;">
                                 <el-button type="success" plain round :icon="DocumentAdd" @click="drawer=true">Add New Material</el-button>
-                                <el-divider direction="vertical"></el-divider>
+                                <el-divider direction="vertical" style="background-color: #FFAE42"></el-divider>
                                 <el-dropdown trigger="click">
                                     <el-button type="plain" plain round :icon="ArrowDown">Generate Report</el-button>
                                     <template #dropdown>
@@ -32,8 +32,6 @@
                         </el-col>
                     </el-row>
 
-
-
                     <el-row id="materials-total-row" style="margin-top: auto; margin-bottom: auto">
                         <el-divider class="secondary-divider"/>
                         <el-col>
@@ -43,9 +41,7 @@
                         <el-divider class="secondary-divider"/>
                     </el-row>
 
-
-
-                    <el-row style="margin-left: 20px; margin-right: 20px; margin-top: auto; margin-bottom: 20px">
+                    <el-row style="margin: auto 20px 20px;">
                         <el-col>
                             <el-card>
                                 <apexchart
@@ -330,7 +326,7 @@ export default {
 .material-dash-aside {
     width: 415px;
     height: 100%;
-    background-color: #545c64;
+    background-color: #33333D;
     color: white;
 }
 .material-dash-container {
@@ -364,8 +360,8 @@ export default {
     height: 2px;
     width: 100%;
     border: none;
-    color: #FFAE42;
-    background-color: #FFAE42;
+    background-color: #84898c;
+    margin-top: 0;
 }
 .secondary-divider {
     height: 2px;
@@ -377,6 +373,9 @@ export default {
     background-color: #FFAE42;
 }
 
+#material-actions-row {
+
+}
 #material-aside-label {
     font-size: 2em;
 }

@@ -3,22 +3,34 @@
         <el-container class="orders-view-container">
             <el-aside class="orders-dash-aside">
                 <el-container class="orders-dash-container">
+                    <el-divider id="main-divider"/>
                     <el-header class="orders-dash-header">
-                        <h1 id="orders-aside-label">ORDERS</h1>
+                        <el-row style="width: 100%">
+                            <el-col>
+                                <h1 id="orders-aside-label">ORDERS</h1>
+                            </el-col>
+                        </el-row>
                     </el-header>
 
-                    <el-divider id="main-divider"/>
-
-                    <el-row id="orders-actions-row">
-                        <el-col>
-                        </el-col>
-                    </el-row>
-
-                    <el-divider id="secondary-divider"/>
+                    <el-divider class="secondary-divider"/>
                     <el-row id="orders-total-row">
                         <el-col>
-                            <h1 id="orders-total-label">Total Orders:</h1>
-                            <label id="orders-count-label">{{productOrders.length}}</label>
+                            <h1 class="orders-total-label">Total</h1>
+                            <label class="orders-count-label">{{productOrders.length}}</label>
+                        </el-col>
+                    </el-row>
+                    <el-divider class="secondary-divider"/>
+                    <el-row id="uncompleted-total-row">
+                        <el-col>
+                            <h1 class="orders-total-label">Uncompleted</h1>
+                            <label class="orders-count-label">{{uncompletedOrders}}</label>
+                        </el-col>
+                    </el-row>
+                    <el-divider class="secondary-divider"/>
+                    <el-row id="completed-total-row">
+                        <el-col>
+                            <h1 class="orders-total-label">Completed</h1>
+                            <label class="orders-count-label">{{completedOrders}}</label>
                         </el-col>
                     </el-row>
                 </el-container>
@@ -180,7 +192,7 @@ export default {
             drawer: shallowRef(false),
             Delete: shallowRef(Delete), Edit: shallowRef(Edit), Search: shallowRef(Search), Refresh: shallowRef(Refresh), DocumentAdd: shallowRef(DocumentAdd), Check: shallowRef(Check),
             selectedOrder: {productOrderId: '', quantity: '', dateCreated: '', color: {colorId: '', color: ''}, product: {productId:'', name: '', sku:''}, materialType: {materialTypeId: '', type: ''}},
-            materialSelectDialogVisible: false, applicableMaterials: [], orderToComplete: {}, selectedMaterial: {}
+            materialSelectDialogVisible: false, applicableMaterials: [], orderToComplete: {}, selectedMaterial: {}, completedOrders: 0, uncompletedOrders: 0
           }
     },
     mounted() {
@@ -199,6 +211,14 @@ export default {
 
             axios.get(apiUrl).then((res) => {
                 this.productOrders = res.data
+                Object.values(this.productOrders).reduce((count, productOrder) => {
+                    if(productOrder.completed) {
+                        ++this.completedOrders
+                    }
+                    else {
+                        ++this.uncompletedOrders
+                    }
+                }, 0)
                 this.loadingTable = false
             }).catch((error) => {
                 ElMessageBox.alert("Something went wrong: " + error)
@@ -314,7 +334,7 @@ export default {
     .orders-dash-aside {
         width: 415px;
         height: 100%;
-        background-color: #545c64;
+        background-color: #33333D;
         color: white;
     }
     .orders-dash-container {
@@ -349,10 +369,10 @@ export default {
         height: 2px;
         width: 100%;
         border: none;
-        color: #FFAE42;
-        background-color: #FFAE42;
+        background-color: #84898c;
+        margin-top: 0;
     }
-    #secondary-divider {
+    .secondary-divider {
         height: 2px;
         width: 50%;
         margin-left: 25%;
@@ -367,13 +387,13 @@ export default {
     #orders-aside-label {
         font-size: 2em;
     }
-    #orders-total-label {
+    .orders-total-label {
         font-size: 1.5em;
     }
-    #orders-count-label {
+    .orders-count-label {
         font-size: 6em;
     }
-    #orders-actions-row {
+    .orders-actions-row {
 
     }
 </style>

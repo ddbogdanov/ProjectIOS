@@ -3,11 +3,15 @@
         <el-container class="products-view-container">
             <el-aside class="hidden-md-and-down products-dash-aside">
                 <el-container class="products-dash-container">
-                    <el-header class="products-dash-header">
-                        <h1 id="products-aside-label">PRODUCTS</h1>
-                    </el-header>
-
                     <el-divider id="main-divider"/>
+                    <el-header class="products-dash-header">
+                        <el-row style="width: 100%">
+                            <el-col>
+                                <h1 id="products-aside-label">PRODUCTS</h1>
+                            </el-col>
+                            <el-divider class="secondary-divider"/>
+                        </el-row>
+                    </el-header>
 
                     <el-row id="products-actions-row">
                         <el-col>
@@ -18,7 +22,7 @@
                         </el-col>
                     </el-row>
 
-                    <el-divider id="secondary-divider"/>
+                    <el-divider class="secondary-divider"/>
 
                     <el-row id="products-total-row">
                         <el-col>
@@ -227,7 +231,7 @@ export default {
     .products-dash-aside {
         width: 415px;
         height: 100%;
-        background-color: #545c64;
+        background-color: #33333D;
         color: white;
     }
     .products-dash-container {
@@ -262,10 +266,10 @@ export default {
         height: 2px;
         width: 100%;
         border: none;
-        color: #FFAE42;
-        background-color: #FFAE42;
+        background-color: #84898c;
+        margin-top: 0;
     }
-    #secondary-divider {
+    .secondary-divider {
         height: 2px;
         width: 50%;
         margin-left: 25%;
