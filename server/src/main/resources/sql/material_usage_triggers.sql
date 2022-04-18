@@ -5,7 +5,8 @@ CREATE OR REPLACE TRIGGER log_material_use
 BEGIN
 
     IF(old.amount_calculated != new.amount_calculated) THEN
-        INSERT INTO material_usage_audit VALUES(
+        INSERT INTO material_usage_audit (material_usage_audit_id, delta_amount, color_id, manufacturer_id, material_type_id, date_performed)
+                                            VALUES(
                                                 null,
                                                 new.amount_calculated - old.amount_calculated,
                                                 new.color_id,
@@ -22,6 +23,7 @@ CREATE OR REPLACE TRIGGER add_log_material_use
 
 BEGIN
 
-    INSERT INTO material_usage_audit VALUES(null, new.amount_calculated, new.color_id, new.manufacturer_id, new.material_type_id, now());
+    INSERT INTO material_usage_audit (material_usage_audit_id, delta_amount, color_id, manufacturer_id, material_type_id, date_performed) VALUES
+    (null, new.amount_calculated, new.color_id, new.manufacturer_id, new.material_type_id, now());
 
 END;

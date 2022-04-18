@@ -1,6 +1,6 @@
 <template>
     <el-container class="form-container">
-        <el-form :model="material" ref="materialFormRef" label-position="top">
+        <el-form :model="material" ref="materialFormRef" label-position="top" :rules="materialFormRules">
 
             <el-form-item label="Name" prop="name">
                 <el-input v-model="material.name"></el-input>
@@ -10,7 +10,7 @@
                 <el-input-number v-model="material.amount" :controls="false"></el-input-number>
             </el-form-item>
 
-            <el-form-item label="Color">
+            <el-form-item label="Color" prop="color">
                 <el-select v-model="material.color" filterable clearable value-key="colorId">
                     <el-option
                         v-for="color in colors"
@@ -37,7 +37,7 @@
                 </el-tooltip>
             </el-form-item>
 
-            <el-form-item label="Manufacturer">
+            <el-form-item label="Manufacturer" prop="manufacturer">
                 <el-select v-model="material.manufacturer" filterable clearable value-key="manufacturerId">
                     <el-option
                         v-for="manufacturer in manufacturers"
@@ -64,7 +64,7 @@
                 </el-tooltip>
             </el-form-item>
 
-            <el-form-item label="Material Type">
+            <el-form-item label="Material Type" prop="materialType">
                 <el-select v-model="material.materialType" filterable clearable value-key="materialTypeId">
                     <el-option
                         v-for="materialType in materialTypes"
@@ -150,6 +150,43 @@ export default {
                         trigger: 'blur'
                     }
                 ],
+            },
+            materialFormRules: {
+                name: [
+                    {
+                        required: true,
+                        message: 'Name is required',
+                        trigger: 'blur'
+                    }
+                ],
+                amount: [
+                    {
+                        required: true,
+                        message: 'Amount is required',
+                        trigger: 'blur',
+                    }
+                ],
+                color: [
+                    {
+                        required: true,
+                        message: 'Color is required',
+                        trigger: 'blur',
+                    }
+                ],
+                manufacturer: [
+                    {
+                        required: true,
+                        message: 'Manufacturer is required',
+                        trigger: 'blur',
+                    }
+                ],
+                materialType: [
+                    {
+                        required: true,
+                        message: 'Type is required',
+                        trigger: 'blur',
+                    }
+                ]
             }
         }
     },
@@ -195,27 +232,34 @@ export default {
             })
         },
         onSubmit() {
-            if(this.material.productionMaterialId !== undefined) {
-                let apiUrl = "/production-material/" + this.material.productionMaterialId
+            this.$refs.materialFormRef.validate((valid) => {
+                if(!valid) return false
+                else {
+                    if (this.material.productionMaterialId !== undefined) {
+                        let apiUrl = "/production-material/" + this.material.productionMaterialId
 
-                axios.put(apiUrl, this.material).then((res) => {
-                    console.log(res)
-                    this.$refs.materialFormRef.resetFields()
-                    this.$bus.trigger('closeMaterialForm')
-                }).catch((error) => {
-                    ElMessageBox.alert('Something went wrong: ' + error)
-                })
-            } else {
-                let apiUrl = "/production-material"
+                        axios.put(apiUrl, this.material).then((res) => {
+                            console.log(res)
+                            this.material.productionMaterialId = undefined
+                            this.$refs.materialFormRef.resetFields()
+                            this.$bus.trigger('closeMaterialForm')
+                        }).catch((error) => {
+                            ElMessageBox.alert('Something went wrong: ' + error)
+                        })
+                    } else {
+                        let apiUrl = "/production-material"
 
-                axios.post(apiUrl, this.material).then((res) => {
-                    console.log(res)
-                    this.$refs.materialFormRef.resetFields()
-                    this.$bus.trigger('closeMaterialForm')
-                }).catch((error) => {
-                    ElMessageBox.alert('Something went wrong: ' + error)
-                })
-            }
+                        axios.post(apiUrl, this.material).then((res) => {
+                            console.log(res)
+                            this.material.productionMaterialId = undefined
+                            this.$refs.materialFormRef.resetFields()
+                            this.$bus.trigger('closeMaterialForm')
+                        }).catch((error) => {
+                            ElMessageBox.alert('Something went wrong: ' + error)
+                        })
+                    }
+                }
+            })
         },
         onCancel() {
             this.$refs.materialFormRef.resetFields()

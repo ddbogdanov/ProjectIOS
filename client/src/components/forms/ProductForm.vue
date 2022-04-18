@@ -45,6 +45,7 @@
                             :value="materialType"
                         ></el-option>
                     </el-select>
+                    <p style="margin-left: 10px;">{{product.materialType.type}}</p>
                 </el-form-item>
 
 
@@ -199,7 +200,9 @@ export default {
                 if(!valid) return false
                 else {
                     let apiUrl = "/product"
-                    this.product.sku = '#' + this.product.sku
+                    if(this.product.sku.charAt(0) !== '#') {
+                        this.product.sku = '#' + this.product.sku
+                    }
 
                     axios.post(apiUrl, this.product).then((res) => {
                         console.log(res)

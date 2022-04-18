@@ -1,6 +1,6 @@
 <template>
     <el-container class="form-container">
-        <el-main>
+        <el-main style="padding-top: 0">
             <el-form :model="productOrder" ref="orderFormRef" label-position="top" :rules="orderFormRules">
                 <el-divider>
                     <h3>Product Order</h3>
@@ -10,7 +10,7 @@
                     <el-input-number v-model="productOrder.quantity" :controls="false"></el-input-number>
                 </el-form-item>
 
-                <el-form-item label="Color">
+                <el-form-item label="Color" prop="color">
                     <el-select v-model="productOrder.color" filterable clearable value-key="colorId">
                         <el-option
                             v-for="color in colors"
@@ -19,6 +19,7 @@
                             :value="color"
                         ></el-option>
                     </el-select>
+                    <label style="margin-left: 10px; color: gray">{{productOrder.color.color}}</label>
                 </el-form-item>
 
                 <el-divider style="margin-top: 40px">
@@ -114,7 +115,7 @@
 
 <script>
 import axios from "axios";
-import {ElMessageBox} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import {Plus, Minus, Search} from "@element-plus/icons-vue"
 import {shallowRef} from "vue";
 
@@ -131,7 +132,22 @@ export default {
             Plus: shallowRef(Plus), Minus: shallowRef(Minus), Search: shallowRef(Search),
 
             accessoryOrderDialogVisible: false, accessories: [], dialogSearch: '', tableSelection: [],
-            orderFormRules: [{}]
+            orderFormRules: {
+                quantity: [
+                    {
+                        required: true,
+                        message: 'Quantity is required',
+                        trigger: 'blur'
+                    },
+                ],
+                color: [
+                    {
+                        required: true,
+                        message: 'Color is required',
+                        trigger: 'blur'
+                    }
+                ],
+            }
         }
     },
     mounted() {
@@ -165,7 +181,6 @@ export default {
 
                     if(this.editing) {
                         let apiUrl = "/product/order/" + this.productOrder.productOrderId
-                        alert(JSON.stringify(this.productOrder))
 
                         axios.put(apiUrl, this.productOrder).then((res) => {
                             console.log(res)
@@ -180,6 +195,7 @@ export default {
 
                         axios.post(apiUrl, this.productOrder).then((res) => {
                             console.log(res)
+                            ElMessage.success('Order created successfully!')
                             this.$refs.orderFormRef.resetFields()
                             this.$bus.trigger('closeOrderForm')
                         }).catch((error) => {

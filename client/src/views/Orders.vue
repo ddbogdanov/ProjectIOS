@@ -211,14 +211,7 @@ export default {
 
             axios.get(apiUrl).then((res) => {
                 this.productOrders = res.data
-                Object.values(this.productOrders).reduce((count, productOrder) => {
-                    if(productOrder.completed) {
-                        ++this.completedOrders
-                    }
-                    else {
-                        ++this.uncompletedOrders
-                    }
-                }, 0)
+                this.counts()
                 this.loadingTable = false
             }).catch((error) => {
                 ElMessageBox.alert("Something went wrong: " + error)
@@ -245,6 +238,7 @@ export default {
 
             axios.delete(apiUrl).then(() => {
                 this.productOrders.splice(this.productOrders.indexOf(row), 1)
+                this.counts()
             }).catch(error => {
                 ElMessageBox.alert('Something went wrong: ' + error)
             })
@@ -320,6 +314,18 @@ export default {
             }).catch(error => {
                 ElMessageBox.alert('Something went wrong: ' + error)
             })
+        },
+        counts() {
+            this.completedOrders = 0
+            this.uncompletedOrders = 0
+            Object.values(this.productOrders).reduce((count, productOrder) => {
+                if(productOrder.completed) {
+                    ++this.completedOrders
+                }
+                else {
+                    ++this.uncompletedOrders
+                }
+            }, 0)
         }
     }
 
